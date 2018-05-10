@@ -2,11 +2,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from metaswitch_tinder.config_model import MetaswitchTinder
+from metaswitch_tinder.components.grid import create_equal_row
 
 
 def home(config: MetaswitchTinder):
     return html.Div([
-        html.A(html.Button('Page 1', id='button1'), href='/page-1'),
-        html.Br(),
-        dcc.Link('Go to Page 2', href='/page-2'),
-    ])
+        html.H1("Metaswitch Tinder", className="text-center"),
+        create_equal_row([
+            html.A(html.Button("I'm a mentor!", id='button1'), href='/page-1', className="text-center"),
+            html.A(html.Button("I'm a mentee!", id='button2'), href='/page-2', className="text-center"),
+        ])
+    ],
+        className="container",)
