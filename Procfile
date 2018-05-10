@@ -1,0 +1,1 @@
+web: gunicorn -w 4 metaswitch_tinder:server
