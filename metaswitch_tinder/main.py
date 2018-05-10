@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output
 from flask import Flask
 
 from metaswitch_tinder.config_model import MetaswitchTinder
-from metaswitch_tinder import pages, example_config
+from metaswitch_tinder import pages, tabs, example_config
 from metaswitch_tinder.tinder_email import send_email
 
 log = logging.getLogger(__name__)
@@ -73,6 +73,11 @@ app.layout = html.Div([
 def display_page(pathname):
     return pages.pages.get(pathname, pages.home)(config)
 
+
+@app.callback(dash.dependencies.Output('tab-content', 'children'),
+              [dash.dependencies.Input('tabs', 'value')])
+def display_tab(value):
+    return tabs.tabs[value](config)
 
 if __name__ == "__main__":
     configure_logging()

@@ -9,7 +9,7 @@ def home(config: MetaswitchTinder):
     return html.Div([
         html.H1("Metaswitch Tinder", className="text-center"),
         create_equal_row([
-            html.A(html.Button("I'm a mentor!", id='button1'), href='/page-1', className="text-center"),
+            html.A(html.Button("I'm a mentor!", id='button1'), href='/mentor-menu', className="text-center"),
             html.A(html.Button("I'm a mentee!", id='button2'), href='/page-2', className="text-center"),
         ])
     ],

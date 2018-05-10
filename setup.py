@@ -38,7 +38,7 @@ setup(
         'dash',
         'dash-renderer',
         'dash-html-components',
-        'dash-core-components',
+        'dash-core-components==0.13.0-rc4',
         'gunicorn',
         'munch',
         'requests',
