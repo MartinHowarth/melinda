@@ -50,8 +50,8 @@ def load_config_from_env() -> MetaswitchTinder:
     return cfg
 
 
-cfg = MetaswitchTinder(example_config.config, partial=False)
-cfg.validate()
+config = MetaswitchTinder(example_config.config, partial=False)
+config.validate()
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
