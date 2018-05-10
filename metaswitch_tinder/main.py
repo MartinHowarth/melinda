@@ -2,7 +2,6 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import flask
 import importlib
 import json
 import logging
@@ -13,7 +12,7 @@ from dash.dependencies import Input, Output
 from flask import Flask
 
 from metaswitch_tinder.config_model import MetaswitchTinder
-from metaswitch_tinder.layout import create_app_layout
+from metaswitch_tinder import pages
 
 log = logging.getLogger(__name__)
 
@@ -58,9 +57,22 @@ server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
 
 app = dash.Dash(name=__name__, server=server)
-app.layout = create_app_layout(config)
 
+app.config.suppress_callback_exceptions = True
 app.css.append_css({"external_url": config.css_cdn})
+
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    html.Div(id='page-content')
+])
+
+
+@app.callback(dash.dependencies.Output('page-content', 'children'),
+              [dash.dependencies.Input('url', 'pathname')])
+def display_page(pathname):
+    pathname = pathname.replace('/', '')
+    return pages.pages.get(pathname, pages.home)(config)
 
 
 if __name__ == "__main__":
