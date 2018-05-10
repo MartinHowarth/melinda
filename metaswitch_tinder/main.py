@@ -12,8 +12,8 @@ import sys
 from dash.dependencies import Input, Output
 from flask import Flask
 
-from .config_model import MetaswitchTinder
-from .layout import create_app_layout
+from metaswitch_tinder.config_model import MetaswitchTinder
+from metaswitch_tinder.layout import create_app_layout
 
 log = logging.getLogger(__name__)
 
@@ -30,11 +30,15 @@ def configure_logging():
 
 
 def load_config_from_file() -> MetaswitchTinder:
-    # Strip the .py extension
-    config_file = os.path.splitext(sys.argv[1])[0]
-    config_module = importlib.import_module(config_file)
+    if len(sys.argv) > 1:
+        # Strip the .py extension
+        config_file = os.path.splitext(sys.argv[1])[0]
+        config_module = importlib.import_module(config_file)
+        config_dict = config_module.config
+    else:
+        config_dict = {}
 
-    cfg = MetaswitchTinder(config_module.config, partial=False)
+    cfg = MetaswitchTinder(config_dict, partial=False)
     cfg.validate()
     return cfg
 
