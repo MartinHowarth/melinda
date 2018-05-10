@@ -13,7 +13,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from metaswitch_tinder.config_model import MetaswitchTinder
-from metaswitch_tinder import pages, tabs, example_config, global_config
+from metaswitch_tinder import tabs, example_config, global_config, pages
 from metaswitch_tinder.tinder_email import send_email
 
 log = logging.getLogger(__name__)
@@ -61,6 +61,7 @@ server.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URL
 global_config.DATABASE = SQLAlchemy(server)
 
 app = dash.Dash(name=__name__, server=server)
+global_config.APP = app
 
 app.config.suppress_callback_exceptions = True
 app.css.append_css({"external_url": config.css_cdn})
@@ -82,6 +83,8 @@ def display_page(pathname):
               [dash.dependencies.Input('tabs', 'value')])
 def display_tab(value):
     return tabs.tabs[value](config)
+
+pages.mentee_landing_page.add_submit_callback(app)
 
 if __name__ == "__main__":
     configure_logging()

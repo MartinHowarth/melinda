@@ -7,6 +7,7 @@ from typing import Dict
 def generate_tabs(tabs: Dict[str, html.Div], default_tab_value: html.Div) -> html.Div:
     """
     :param tabs: Dict of {"tab_name": html.Div(tab contents)}
+    :param default_tab_value: The default value to display
     :return: html.Div for the tabs.
     """
     formatted_dict = [
