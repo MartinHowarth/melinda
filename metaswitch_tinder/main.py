@@ -13,6 +13,7 @@ from flask import Flask
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import pages
+from metaswitch_tinder.tinder_email import send_email
 
 log = logging.getLogger(__name__)
 
