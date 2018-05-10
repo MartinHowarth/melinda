@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output
 from flask import Flask
 
 from metaswitch_tinder.config_model import MetaswitchTinder
-from metaswitch_tinder import pages
+from metaswitch_tinder import pages, example_config
 from metaswitch_tinder.tinder_email import send_email
 
 log = logging.getLogger(__name__)
@@ -36,7 +36,8 @@ def load_config_from_file() -> MetaswitchTinder:
         config_module = importlib.import_module(config_file)
         config_dict = config_module.config
     else:
-        config_dict = {}
+        # Default to example_config
+        config_dict = example_config.config
 
     cfg = MetaswitchTinder(config_dict, partial=False)
     cfg.validate()
@@ -72,7 +73,6 @@ app.layout = html.Div([
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
-    pathname = pathname.replace('/', '')
     return pages.pages.get(pathname, pages.home)(config)
 
 

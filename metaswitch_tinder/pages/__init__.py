@@ -5,7 +5,7 @@ from .home import home
 
 
 pages = {
-    'page-1': page_1,
-    'page-2': page_2,
-    'easter': easter
+    '/page-1': page_1,
+    '/page-2': page_2,
+    '/easter': easter
 }
