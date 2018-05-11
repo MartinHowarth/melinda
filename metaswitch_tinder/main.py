@@ -16,6 +16,7 @@ from flask_sqlalchemy import SQLAlchemy
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import example_config, global_config
 from metaswitch_tinder.components import widgets
+from metaswitch_tinder.constants import JAVASCRIPT_DIR
 
 log = logging.getLogger(__name__)
 
@@ -103,7 +104,7 @@ tabs.matches.add_callbacks(app)
 widgets.add_callbacks(app)
 
 # Add each script to the app from the JAVASCRIPT_DIR
-for script in os.listdir('javascript'):
+for script in os.listdir(JAVASCRIPT_DIR):
     if os.path.splitext(script)[1] != '.js':
         continue
     app.scripts.append_script({
@@ -114,7 +115,7 @@ for script in os.listdir('javascript'):
 # Use Flask to serve the javascript source files statically.
 @app.server.route('/static/<filename>.js')
 def serve_script(filename):
-    return flask.send_from_directory('javascript', '{}.js'.format(filename))
+    return flask.send_from_directory(JAVASCRIPT_DIR, '{}.js'.format(filename))
 
 
 if __name__ == "__main__":

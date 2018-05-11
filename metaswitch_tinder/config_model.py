@@ -9,3 +9,4 @@ class MetaswitchTinder(Model):
     sad_ducks = ListType(URLType(required=True))
     default_user_image = URLType(required=True)
     DATABASE_URL = StringType(required=True)
+    swipe_gif = URLType(required=True)

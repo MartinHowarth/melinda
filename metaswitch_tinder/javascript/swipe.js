@@ -1,5 +1,5 @@
 function result(user_choice) {
-  console.log(user_choice);
+  //console.log(user_choice);
   var image = document.getElementById('match-img');
   if (!image) {
     console.log("No image element in page.");
@@ -22,6 +22,9 @@ var xDown = null;
 
 function handleDragStart(evt) {
   xDown = evt.clientX;
+  var gif = document.createElement("img");
+  gif.src = "https://preview.ibb.co/eLrFdy/swipe.gif";
+  evt.dataTransfer.setDragImage(gif, 220, 20);
 };
 
 function handleTouchStart(evt) {
@@ -44,7 +47,7 @@ function handleDragEnd(evt) {
 function handleEnd(xUp) {
   if ( !xDown ) { return; }
   var xDiff = xDown - xUp;
-  if ( xDiff > 2 ) result('reject-match');
-  if ( xDiff < -2 ) result('accept-match');
+  if ( xDiff > 100 ) result('reject-match');
+  if ( xDiff < -100 ) result('accept-match');
   xDown = null;
 };

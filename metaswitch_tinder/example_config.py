@@ -9,6 +9,7 @@ config = {
                   'https://vignette.wikia.nocookie.net/uncyclopedia/images/6/60/Sad_duck.jpg/revision/latest?cb=20090621212341'],
     'default_user_image': 'https://is2-ssl.mzstatic.com/image/thumb/Purple71/v4/c9/f9/d1/c9f9d1e4-b9f1-6bf2-5846-199528ddab8e/source/512x512bb.jpg',
     'DATABASE_URL': 'postgres://helscbcaevmlbw:f939ac997bed11ed53595d047c2bf64be9a280a7c3c8356fed0f87ea4d3aee2e@ec2-79-125-117-53.eu-west-1.compute.amazonaws.com:5432/d52ujvjg2sig3',
+    'swipe_gif': 'https://thumbs.gfycat.com/PhonyWealthyEastrussiancoursinghounds-max-1mb.gif',
 }
 
 if __name__ == "__main__":
