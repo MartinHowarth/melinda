@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from dash.dependencies import Input, Output, State, Event
+from flask import session
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config
@@ -14,7 +15,7 @@ NAME = __name__.replace('.', '')
 
 def signup_redirected(next_page):
     def signup(config: MetaswitchTinder=None):
-        global_config.Global.IS_MENTEE = False
+        session['is_mentee'] = False
         return html.Div([
             html.H1("Metaswitch Tinder", className="text-center"),
             html.Br(),
@@ -53,6 +54,6 @@ def add_callbacks(app):
         [Event('submit-{}'.format(NAME), 'click')]
     )
     def submit_signup_information(username, email, biography):
-        global_config.Global.USERNAME = username
+        session['username'] = username
         database.identity.handle_signup_submit(username, email, biography)
         return

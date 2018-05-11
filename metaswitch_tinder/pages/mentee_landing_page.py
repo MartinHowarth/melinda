@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from dash.dependencies import Input, Output, State, Event
+from flask import session
 
 import metaswitch_tinder.database.matches
 from metaswitch_tinder.config_model import MetaswitchTinder
@@ -14,13 +15,14 @@ NAME = __name__.replace('.', '')
 
 
 def mentee_landing_page(config: MetaswitchTinder):
-    global_config.Global.IS_MENTEE = True
-    if global_config.Global.USERNAME:
+    session['is_mentee'] = True
+    if 'username' in session:
         is_signed_in_fields = [
-            html.H4("Welcome {}!".format(global_config.Global.USERNAME),
+            html.H4("Welcome {}!".format(session['username']),
                     className="text-center"),
             # Must include something with the id `email-NAME`, but hidden in this case
-            dcc.Input(value='', type='text', id='email-{}'.format(NAME), style={'display': 'none'})
+            dcc.Input(value='', type='text', id='email-{}'.format(NAME), style={'display': 'none'}),
+            dcc.Input(value='', type='text', id='username-{}'.format(NAME), style={'display': 'none'})
         ]
     else:
         is_signed_in_fields = [
@@ -28,6 +30,11 @@ def mentee_landing_page(config: MetaswitchTinder):
                                id='sign-in-{}'.format(NAME),
                                className="btn btn-lg btn-primary btn-block"),
                    href='/mentee-signin'),
+            html.Br(),
+            create_equal_row([
+                html.Label('Name:', className="text-center"),
+                dcc.Input(value='', type='text', id='username-{}'.format(NAME)),
+            ]),
             html.Br(),
             create_equal_row([
                 html.Label('Email:', className="text-center"),
@@ -61,12 +68,14 @@ def add_callbacks(app):
         Output('my-div'.format(NAME), 'children'),
         [],
         [
+            State('username-{}'.format(NAME), 'value'),
             State('email-{}'.format(NAME), 'value'),
             State('categories-{}'.format(NAME), 'value'),
             State('details-{}'.format(NAME), 'value'),
         ],
         [Event('submit-{}'.format(NAME), 'click')]
     )
-    def submit_mentee_information(email, categories, details):
-        metaswitch_tinder.database.matches.handle_mentee_added_request(email, categories, details)
+    def submit_mentee_information(username, email, categories, details):
+        session['username'] = username
+        metaswitch_tinder.database.matches.handle_mentee_added_request(username, email, categories, details)
         return

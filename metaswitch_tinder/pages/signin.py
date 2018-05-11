@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from dash.dependencies import Input, Output, State, Event
+from flask import session
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config
@@ -40,7 +41,6 @@ def add_callbacks(app):
         [Event('submit-{}'.format(NAME), 'click')]
     )
     def submit_signup_information(username):
-        print("here")
-        global_config.Global.USERNAME = username
+        session['username'] = username
         database.identity.handle_signin_submit(username)
         return

@@ -3,12 +3,14 @@ import dash_html_components as html
 import random
 
 from dash.dependencies import Input, Output, State, Event
+from flask import session
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config, matches, database
 from metaswitch_tinder.components.grid import create_equal_row
 
 current_matches = ("Empty")
+
 
 def children_no_matches():
     return [
@@ -109,12 +111,12 @@ def add_callbacks(app):
         if n_done_clicked:
             return matches_done()
         if n_accept_clicked:
-            if global_config.Global.IS_MENTEE:
+            if session['is_mentee']:
                 database.matches.handle_mentee_accept_match(other_user)
             else:
                 database.matches.handle_mentor_accept_match(other_user)
         else:
-            if global_config.Global.IS_MENTEE:
+            if session['is_mentee']:
                 database.matches.handle_mentee_reject_match(other_user)
             else:
                 database.matches.handle_mentor_reject_match(other_user)

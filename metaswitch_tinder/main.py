@@ -9,11 +9,12 @@ import os
 import sys
 
 from dash.dependencies import Input, Output
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import tabs, example_config, global_config, pages
+from metaswitch_tinder.components import widgets
 from metaswitch_tinder.tinder_email import send_email
 
 log = logging.getLogger(__name__)
@@ -71,6 +72,7 @@ app.css.append_css({"external_url": config.css_cdn})
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
+    html.Div(widgets.logout_button()),
     html.Div(id='page-content')
 ])
 
@@ -91,6 +93,7 @@ pages.mentee_landing_page.add_callbacks(app)
 pages.signup.add_callbacks(app)
 pages.signin.add_callbacks(app)
 tabs.matches.add_callbacks(app)
+widgets.add_callbacks(app)
 
 
 if __name__ == "__main__":

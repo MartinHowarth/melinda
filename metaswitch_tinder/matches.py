@@ -1,6 +1,7 @@
 import itertools
 
 from collections import defaultdict
+from flask import session
 from typing import List
 
 from metaswitch_tinder import global_config
@@ -54,6 +55,6 @@ def generate_matches():
     request_tag_map = tag_to_request_mapping(mentees)
     mentor_tag_map = tag_to_mentor_mapping(mentors)
 
-    if global_config.Global.IS_MENTEE:
-        return matches_for_mentee(mentor_tag_map, database.users.get_mentee(global_config.Global.USERNAME))
-    return matches_for_mentor(request_tag_map, database.users.get_mentor(global_config.Global.USERNAME))
+    if session['is_mentee']:
+        return matches_for_mentee(mentor_tag_map, database.users.get_mentee(session['username']))
+    return matches_for_mentor(request_tag_map, database.users.get_mentor(session['username']))
