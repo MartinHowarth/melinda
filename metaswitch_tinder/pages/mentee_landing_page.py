@@ -22,27 +22,31 @@ def mentee_landing_page(config: MetaswitchTinder):
                     className="text-center"),
             # Must include something with the id `email-NAME`, but hidden in this case
             dcc.Input(value='', type='text', id='email-{}'.format(NAME), style={'display': 'none'}),
-            dcc.Input(value='', type='text', id='username-{}'.format(NAME), style={'display': 'none'})
+            dcc.Input(value='', type='text', id='username-{}'.format(NAME), style={'display': 'none'}),
+            html.Br(),
+            html.Br(),
+            html.H3('New mentoring request', className="text-center"),
         ]
     else:
         is_signed_in_fields = [
             html.H3('Existing Users', className="text-center"),
-            html.Br(),
-            create_equal_row([
-                html.Label('Name:', className="text-center"),
-                dcc.Input(value='', type='text', id='username-{}'.format(NAME)),
-            ]),
-            html.Br(),
-            create_equal_row([
-                html.Label('Email:', className="text-center"),
-                dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
-            ]),
-            html.Br(),
             html.A(html.Button("Sign in",
                                id='sign-in-{}'.format(NAME),
                                className="btn btn-lg btn-primary btn-block"),
                    href='/mentee-signin'),
             html.Br(),
+            html.Br(),
+            html.H3('New mentoring request', className="text-center"),
+            html.Br(),
+            create_equal_row([
+                html.Label('Name:'),
+                dcc.Input(value='', type='text', id='username-{}'.format(NAME)),
+            ]),
+            html.Br(),
+            create_equal_row([
+                html.Label('Email:',),
+                dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
+            ]),
         ]
 
     return html.Div([
@@ -50,13 +54,11 @@ def mentee_landing_page(config: MetaswitchTinder):
         html.Br(),
         *is_signed_in_fields,
         html.Br(),
-        html.H2('New mentoring request', className="text-center"),
-        html.Br(),
-        html.H4('Select your mentoring topic', className="text-center"),
+        html.Label('Mentoring topic:'),
         html.Br(),
         multi_dropdown_with_tags(database.tags.get_tags(), 'categories-{}'.format(NAME)),
         html.Br(),
-        html.H4('Additional topic tags', className="text-center"),
+        html.Label('Additional topic tags:', className="text-center"),
         html.Br(),
         create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
         html.Br(),
