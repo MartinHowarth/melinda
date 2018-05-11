@@ -16,6 +16,8 @@ document.addEventListener('dragover', handleDragOver, false);
 // On mobile swipe action
 document.addEventListener('touchstart', handleTouchStart, false);
 document.addEventListener('touchmove', handleTouchEnd, false);
+window.addEventListener('touchstart', handleTouchStart, false);
+window.addEventListener('touchmove', handleTouchEnd, false);
 
 
 var xDown = null;
@@ -33,6 +35,7 @@ evt.dataTransfer.setDragImage(img, 220, 20);
 }
 
 function handleTouchStart(evt) {
+  evt.preventDefault();
   xDown = evt.touches[0].clientX;
 };
 
