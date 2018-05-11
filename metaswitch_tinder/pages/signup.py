@@ -6,7 +6,7 @@ from flask import session
 
 from metaswitch_tinder import global_config
 from metaswitch_tinder.components.grid import create_equal_row
-from metaswitch_tinder import database
+from metaswitch_tinder import database, pages
 
 
 NAME = __name__.replace('.', '')
@@ -39,10 +39,9 @@ def signup_redirected(next_page):
             create_equal_row([html.Label('Additional topic tags:')]),
             create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
             html.Br(),
-            html.A(html.Button("Submit!", id='submit-{}'.format(NAME),
-                               n_clicks=0, className="btn btn-lg btn-primary btn-block"),
-                   href=next_page),
-            html.Br(),
+            html.Button("Submit!", id='submit-{}'.format(NAME),
+                        n_clicks=0, className="btn btn-lg btn-primary btn-block"),
+            html.Div(next_page, id='next-page', style={'display': 'none'})
         ], className="container", id='signup')
     return signup
 
@@ -55,10 +54,11 @@ def add_callbacks(app):
             State('username-{}'.format(NAME), 'value'),
             State('email-{}'.format(NAME), 'value'),
             State('biography-{}'.format(NAME), 'value'),
+            State('next-page', 'children'),
         ],
         [Event('submit-{}'.format(NAME), 'click')]
     )
-    def submit_signup_information(username, email, biography):
+    def submit_signup_information(username, email, biography, next_page):
         session['username'] = username
         database.identity.handle_signup_submit(username, email, biography)
-        return
+        return pages.pages[next_page]()

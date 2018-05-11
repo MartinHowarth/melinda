@@ -61,7 +61,8 @@ def children_for_match(match: matches.Match, completed_users):
             html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
             html.Div(completed_users, id='completed-users', style={'display': 'none'}),
-            html.Div(list(set(match.their_tags) & set(match.your_tags)), id='matched-tags', style={'display': 'none'})
+            html.Div(list(set(match.their_tags) & set(match.your_tags)), id='matched-tags', style={'display': 'none'}),
+            html.Div(match.request_id, id='match-request-id', style={'display': 'none'}),
         ]
 
 
@@ -113,7 +114,8 @@ def add_callbacks(app):
             State('reject-match', 'n_clicks'),
             State('done', 'n_clicks'),
             State('completed-users', 'children'),
-            State('matched-tags', 'children')
+            State('matched-tags', 'children'),
+            State('matched-request-id', 'children')
         ],
         [
             Event('accept-match', 'click'),
@@ -122,18 +124,18 @@ def add_callbacks(app):
         ]
     )
     def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked, completed_users,
-                                  matched_tags):
+                                  matched_tags, match_request_id):
         if n_done_clicked:
             return matches_done()
         if n_accept_clicked:
             if session['is_mentee']:
-                matches.handle_mentee_accept_match(other_user)
+                matches.handle_mentee_accept_match(other_user, match_request_id)
             else:
-                matches.handle_mentor_accept_match(other_user, matched_tags)
+                matches.handle_mentor_accept_match(other_user, matched_tags, match_request_id)
         else:
             if session['is_mentee']:
-                matches.handle_mentee_reject_match(other_user)
+                matches.handle_mentee_reject_match(other_user, match_request_id)
             else:
-                matches.handle_mentor_reject_match(other_user)
+                matches.handle_mentor_reject_match(other_user, match_request_id)
         completed_users.append(other_user)
         return get_matches_children(completed_users)

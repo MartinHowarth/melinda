@@ -5,7 +5,6 @@ from dash.dependencies import Input, Output, State, Event
 from flask import session
 
 import metaswitch_tinder.database.matches
-from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
 from metaswitch_tinder import database

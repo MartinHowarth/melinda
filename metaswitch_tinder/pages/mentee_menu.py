@@ -1,4 +1,3 @@
-from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder.components.tabs import generate_tabs
 
 
