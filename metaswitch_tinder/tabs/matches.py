@@ -20,7 +20,9 @@ def children_no_matches():
             html.P("Aw shucks! You're out of matches!", className="lead"),
             html.Br(),
             html.A(html.Button("Return to start", className="btn btn-primary btn-lg btn-block"),
-                   href='/mentee-landing-page')
+                   href='/mentee-landing-page'),
+            html.Br(),
+            html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
         ]
 
 
@@ -50,6 +52,7 @@ def children_for_match(match: matches.Match):
                     html.Td(match.bio)
                 ], className="table-success"),
                ], className="table table-condensed"),
+            html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'})
         ]
 
@@ -68,6 +71,16 @@ def get_matches_children():
     return children
 
 
+def matches_done():
+    return [
+        html.Br(),
+        html.H4("Thanks, your request has been submitted",
+                className="text-center"),
+        html.A(html.Button("Make another request?", className="btn btn-primary btn-lg btn-block"),
+               href='/mentee-landing-page')
+    ]
+
+
 def matches_tab(config: MetaswitchTinder=None):
     return html.Div(
         children=get_matches_children(),
@@ -84,13 +97,17 @@ def add_callbacks(app):
             State('current-other-user', 'children'),
             State('accept-match', 'n_clicks'),
             State('reject-match', 'n_clicks'),
+            State('done', 'n_clicks')
         ],
         [
             Event('accept-match', 'click'),
             Event('reject-match', 'click'),
+            Event('done', 'click'),
         ]
     )
-    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked):
+    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked):
+        if n_done_clicked:
+            return matches_done()
         if n_accept_clicked:
             if global_config.Global.IS_MENTEE:
                 database.matches.handle_mentee_accept_match(other_user)

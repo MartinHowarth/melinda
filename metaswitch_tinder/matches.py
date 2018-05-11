@@ -54,7 +54,6 @@ def generate_matches():
     request_tag_map = tag_to_request_mapping(mentees)
     mentor_tag_map = tag_to_mentor_mapping(mentors)
 
-    # TODO - Somehow mark that a match has been rejected/accepted and don't show it
     if global_config.Global.IS_MENTEE:
         return matches_for_mentee(mentor_tag_map, database.users.get_mentee(global_config.Global.USERNAME))
     return matches_for_mentor(request_tag_map, database.users.get_mentor(global_config.Global.USERNAME))
