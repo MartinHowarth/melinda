@@ -37,6 +37,7 @@ function handleTouchStart(evt) {
 };
 
 function handleTouchEnd(evt) {
+  evt.preventDefault();
   handleEnd(evt.touches[0].clientX);
 }
 
