@@ -13,7 +13,7 @@ def children_no_matches():
     return [
             html.Br(),
             html.Img(src=random.choice(global_config.Global.CONFIG.sad_ducks),
-                     className="rounded-circle", width=200, height=200),
+                     className="rounded-circle", width=200, height=200, id='no-match'),
             html.Br(),
             html.Br(),
             html.P("Aw shucks! You're out of matches!", className="lead"),

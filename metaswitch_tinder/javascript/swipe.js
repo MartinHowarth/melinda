@@ -22,12 +22,16 @@ var xDown = null;
 
 function handleDragStart(evt) {
   xDown = evt.clientX;
-  if (document.getElementById('match-img')) {
-    var gif = document.createElement("img");
-    gif.src = "https://preview.ibb.co/eLrFdy/swipe.gif";
-    evt.dataTransfer.setDragImage(gif, 220, 20);
+  swipe_gif = "https://preview.ibb.co/eLrFdy/swipe.gif";
+  setDragGhost(swipe_gif, evt);
   }
 };
+
+function setDragGhost(url, evt) {
+var img = document.createElement("img");
+img.src = url
+evt.dataTransfer.setDragImage(img, 220, 20);
+}
 
 function handleTouchStart(evt) {
   xDown = evt.touches[0].clientX;
