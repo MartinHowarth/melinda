@@ -84,9 +84,6 @@ def handle_mentee_accept_match(matched_user, matched_tags, request_id):
     current_user = database.manage.get_user(session['username'])
     other_user = database.manage.get_user(matched_user)
     database.matches.handle_mentee_accept_match(request_id, current_user, other_user)
-    # TODO - make the email text better
-
-    # TODO - Add the mentee to the list of matches for the mentor
 
 
 def handle_mentor_reject_match(matched_user, request_id):
