@@ -27,7 +27,7 @@ def children_no_matches():
             html.Div(0, id='reject-match', style={'display': 'none'}),
             html.Div(None, id='completed-users', style={'display': 'none'}),
             html.Div(None, id='matched-tags', style={'display': 'none'}),
-            html.Div("", id='match-request-id', style={'display': 'none'}),
+            html.Div("", id='matched-request-id', style={'display': 'none'}),
         ]
 
 
@@ -63,7 +63,7 @@ def children_for_match(match: matches.Match, completed_users):
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
             html.Div(completed_users, id='completed-users', style={'display': 'none'}),
             html.Div(list(set(match.their_tags) & set(match.your_tags)), id='matched-tags', style={'display': 'none'}),
-            html.Div(match.request_id, id='match-request-id', style={'display': 'none'}),
+            html.Div(match.request_id, id='matched-request-id', style={'display': 'none'}),
         ]
 
 
