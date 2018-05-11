@@ -1,1 +1,1 @@
-from . import identity, tags, matches, users, manage
+from . import identity, tags, matches, manage

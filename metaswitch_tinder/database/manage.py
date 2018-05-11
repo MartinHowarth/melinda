@@ -1,6 +1,9 @@
-from metaswitch_tinder.global_config import DATABASE as db
-from random import randint
 import time
+
+from enum import Enum
+from random import randint
+
+from metaswitch_tinder.global_config import DATABASE as db
 
 
 class User(db.Model):
@@ -32,6 +35,7 @@ class User(db.Model):
         db.session.commit()
         return
 
+
 class Request(db.Model):
     """
     id - Randomly generated "unique" ID of request
@@ -42,12 +46,19 @@ class Request(db.Model):
             * unmatched (no match found yet)
             * pending (email sent to potential match)
             * matched (a match has been accepted)
+            * rejected (a match has been rejected)
     """
-    id = db.Column(db.String, primary_key = True)
+    id = db.Column(db.String, primary_key=True)
     maker = db.Column(db.String(80))
     tags = db.Column(db.String(2000))
     comment = db.Column(db.String(2000))
     state = db.Column(db.String(80))
+
+    class State(Enum):
+        UNMATCHED = 'unmatched'
+        PENDING = 'pending'
+        MATCHED = 'matched'
+        REJECTED = 'rejected'
 
     def __init__(self, maker, tags, comment, state):
         self.id = str(time.time()) + str(randint(1, 100))
@@ -81,15 +92,18 @@ def list_all_users():
 def get_user(match_name):
     return User.query.filter_by(name=match_name).first()
 
+
 def get_request_by_user(match_name):
     # Return list of all Requests made by "match_name"
     return Request.query.filter_by(maker=match_name).all()
+
 
 def purge_table(table):
     # Delete all rows in specified table
     table.query.delete()
     db.session.commit()
     return
+
 
 def delete_table(table):
     # Delete specified table

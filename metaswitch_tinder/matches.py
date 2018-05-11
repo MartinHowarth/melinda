@@ -15,7 +15,7 @@ class Match:
         self.your_tags = your_tags
 
 
-def tag_to_mentor_mapping(mentors: List[database.users.Mentor]):
+def tag_to_mentor_mapping(mentors: List[database.manage.User]):
     tag_map = defaultdict(list)
     for mentor in mentors:
         for tag in mentor.tags:
@@ -23,7 +23,7 @@ def tag_to_mentor_mapping(mentors: List[database.users.Mentor]):
     return tag_map
 
 
-def tag_to_request_mapping(mentees: List[database.users.Mentee]):
+def tag_to_request_mapping(mentees: List[database.manage.User]):
     tag_map = defaultdict(list)
     for mentee in mentees:
         for request in mentee.requests:
@@ -32,7 +32,7 @@ def tag_to_request_mapping(mentees: List[database.users.Mentee]):
     return tag_map
 
 
-def matches_for_mentee(mentor_tag_map, mentee: database.users.Mentee):
+def matches_for_mentee(mentor_tag_map, mentee: database.manage.User):
     matches = []
     for request in mentee.requests:
         possible_mentors = list(itertools.chain(*[mentor_tag_map[tag] for tag in request.tags]))
@@ -41,7 +41,7 @@ def matches_for_mentee(mentor_tag_map, mentee: database.users.Mentee):
     return matches
 
 
-def matches_for_mentor(request_tag_map, mentor: database.users.Mentor):
+def matches_for_mentor(request_tag_map, mentor: database.manage.User):
     matches = []
     possible_requests = list(itertools.chain(*[request_tag_map[tag] for tag in mentor.tags]))
     if possible_requests:
@@ -76,6 +76,7 @@ def handle_mentee_accept_match(matched_user):
     # TODO - make the email text better
 
     # TODO - Add the mentee to the list of matches for the mentor
+
 
 def handle_mentor_reject_match(matched_user):
     print("mentor rejected match:", matched_user)
