@@ -50,6 +50,8 @@ def matches_for_mentor(request_tag_map, mentor: database.manage.User):
     user = database.manage.get_user(session.get('username', 'Not logged in!'))
     matches = []
     print(user.mentor_matches)
+    if user.mentor_matches == '':
+        return matches
     for match in user.mentor_matches.split(','):
         username, request_id = match.split(':')
         mentee = database.manage.get_user(username)
@@ -81,7 +83,6 @@ def handle_mentee_accept_match(matched_user, matched_tags, request_id):
     current_user = database.manage.get_user(session['username'])
     other_user = database.manage.get_user(matched_user)
     database.matches.handle_mentee_accept_match(request_id, current_user, other_user)
-    tinder_email.send_email([current_user.email, other_user.email], "You've matched on " + (','.join(matched_tags)))
     # TODO - make the email text better
 
     # TODO - Add the mentee to the list of matches for the mentor
