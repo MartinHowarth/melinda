@@ -22,9 +22,11 @@ var xDown = null;
 
 function handleDragStart(evt) {
   xDown = evt.clientX;
-  var gif = document.createElement("img");
-  gif.src = "https://preview.ibb.co/eLrFdy/swipe.gif";
-  evt.dataTransfer.setDragImage(gif, 220, 20);
+  if (document.getElementById('match-img')) {
+    var gif = document.createElement("img");
+    gif.src = "https://preview.ibb.co/eLrFdy/swipe.gif";
+    evt.dataTransfer.setDragImage(gif, 220, 20);
+  }
 };
 
 function handleTouchStart(evt) {
