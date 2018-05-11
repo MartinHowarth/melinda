@@ -13,6 +13,7 @@ class User(db.Model):
         self.email = email
         self.bio = bio
         self.tags = tags
+        self.mentor_matches = []
 
     def __repr__(self):
         return """

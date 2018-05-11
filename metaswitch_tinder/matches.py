@@ -69,6 +69,7 @@ def handle_mentee_reject_match(matched_user):
 def handle_mentee_accept_match(matched_user):
     print("mentee accepted match:", matched_user)
     database.matches.handle_mentee_accept_match(matched_user)
+    # TODO - Add the mentee to the list of matches for the mentor
 
 def handle_mentor_reject_match(matched_user):
     print("mentor rejected match:", matched_user)
