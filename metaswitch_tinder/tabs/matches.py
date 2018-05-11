@@ -25,6 +25,9 @@ def children_no_matches():
                    href='/mentee-landing-page'),
             html.Br(),
             html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
+            html.Div(None, id='current-other-user', style={'display': 'none'}),
+            html.Div(0, id='accept-match', style={'display': 'none'}),
+            html.Div(0, id='reject-match', style={'display': 'none'}),
         ]
 
 
@@ -78,8 +81,12 @@ def matches_done():
         html.Br(),
         html.H4("Thanks, your request has been submitted",
                 className="text-center"),
+        html.Br(),
         html.A(html.Button("Make another request?", className="btn btn-primary btn-lg btn-block"),
-               href='/mentee-landing-page')
+               href='/mentee-landing-page'),
+        html.Br(),
+        html.A(html.Button("Create account?", className="btn btn-primary btn-lg btn-block"),
+               href='/mentee-signup')
     ]
 
 
