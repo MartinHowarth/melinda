@@ -32,6 +32,8 @@ def children_no_matches():
 
 
 def children_for_match(match: matches.Match, completed_users):
+    your_tags = match.your_tags.split(',')
+    their_tags = match.their_tags.split(',')
     return [
             html.Br(),
             create_magic_three_row([
@@ -62,7 +64,7 @@ def children_for_match(match: matches.Match, completed_users):
             html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
             html.Div(completed_users, id='completed-users', style={'display': 'none'}),
-            html.Div(list(set(match.their_tags) & set(match.your_tags)), id='matched-tags', style={'display': 'none'}),
+            html.Div(list(set(their_tags) & set(your_tags)), id='matched-tags', style={'display': 'none'}),
             html.Div(match.request_id, id='matched-request-id', style={'display': 'none'}),
         ]
 
