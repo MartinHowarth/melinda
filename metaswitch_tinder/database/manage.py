@@ -107,8 +107,11 @@ class User(db.Model):
         requests = [req for req in requests if req is not None]
         return requests
 
-    def add_mentor_match(self, match):
-        self.mentor_matches += ',' + match
+    def add_mentor_match(self, match, request_id):
+        if self.mentor_matches == '':
+            self.mentor_matches = match + ":" + request_id
+        else:
+            self.mentor_matches += ',' + match + ":" + request_id
         db.session.commit()
 
     def get_tags(self):

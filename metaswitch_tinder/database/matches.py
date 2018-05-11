@@ -5,8 +5,6 @@ def handle_mentee_add_request(username, categories, details):
     print("Mentee added request:", username, categories, details)
     request = Request(username, categories, details)
     request.add()
-    print(list_all_users())
-    print(list_all_requests())
 
 
 def handle_mentee_signup_and_request(username, email, categories, details):
@@ -14,8 +12,6 @@ def handle_mentee_signup_and_request(username, email, categories, details):
     mentee = User(username, email, '', '', '')
     mentee.add()
     handle_mentee_add_request(username, categories, details)
-    print(list_whole_table(Request))
-    print(list_whole_table(User))
 
 
 def handle_mentee_reject_match(request_id):
@@ -30,7 +26,7 @@ def handle_mentee_accept_match(request_id, current_user, matched_user):
     request = get_request_by_id(request_id)
     request.state = "matched"
     request.commit()
-    matched_user.add_mentor_match(current_user.name)
+    matched_user.add_mentor_match(current_user.name, request_id)
 
 
 def handle_mentor_reject_match(request_id):

@@ -49,8 +49,12 @@ def matches_for_mentee(mentor_tag_map, mentee: database.manage.User) -> List[Mat
 def matches_for_mentor(request_tag_map, mentor: database.manage.User):
     user = database.manage.get_user(session.get('username', 'Not logged in!'))
     matches = []
-    for username in user.mentor_matches.split(','):
-        matches.extend(database.manage.get_user(username))
+    print(user.mentor_matches)
+    for match in user.mentor_matches.split(','):
+        username, request_id = match.split(':')
+        mentee = database.manage.get_user(username)
+        request = database.manage.get_request_by_id(request_id)
+        matches.extend([Match(mentee.name, mentee.tags, mentee.bio, request.tags, request_id)])
     return matches
 
 
