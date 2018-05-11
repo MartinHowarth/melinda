@@ -119,12 +119,12 @@ def add_callbacks(app):
             return matches_done()
         if n_accept_clicked:
             if session['is_mentee']:
-                database.matches.handle_mentee_accept_match(other_user)
+                matches.handle_mentee_accept_match(other_user)
             else:
-                database.matches.handle_mentor_accept_match(other_user)
+                matches.handle_mentor_accept_match(other_user)
         else:
             if session['is_mentee']:
-                database.matches.handle_mentee_reject_match(other_user)
+                matches.handle_mentee_reject_match(other_user)
             else:
-                database.matches.handle_mentor_reject_match(other_user)
+                matches.handle_mentor_reject_match(other_user)
         return get_matches_children()

@@ -5,7 +5,7 @@ from flask import session
 from typing import List
 
 from metaswitch_tinder import global_config
-from metaswitch_tinder import database
+from metaswitch_tinder import database, tinder_email
 
 
 class Match:
@@ -58,3 +58,31 @@ def generate_matches():
     if session['is_mentee']:
         return matches_for_mentee(mentor_tag_map, database.users.get_mentee(session['username']))
     return matches_for_mentor(request_tag_map, database.users.get_mentor(session['username']))
+
+
+def handle_mentee_reject_match(matched_user):
+    print("mentee rejected match:", matched_user)
+    database.matches.handle_mentee_reject_match(matched_user)
+
+
+def handle_mentee_accept_match(matched_user):
+    print("mentee accepted match:", matched_user)
+    database.matches.handle_mentee_accept_match(matched_user)
+    current_user = database.users.get_mentee(session['username'])
+    other_user = database.users.get_mentor(matched_user)
+    tinder_email.send_email([current_user.email, other_user.email], "You've matched on ...")
+    # TODO - make the email text better
+
+
+def handle_mentor_reject_match(matched_user):
+    print("mentor rejected match:", matched_user)
+    database.matches.handle_mentor_reject_match(matched_user)
+
+
+def handle_mentor_accept_match(matched_user):
+    print("mentor accepted match:", matched_user)
+    database.matches.handle_mentor_accept_match(matched_user)
+    current_user = database.users.get_mentor(session['username'])
+    other_user = database.users.get_mentee(matched_user)
+    tinder_email.send_email([current_user.email, other_user.email], "You've matched on ...")
+    # TODO - make the email text better
