@@ -53,5 +53,5 @@ def get_mentors():
     # TODO actually get all mentors from database
     return [
         Mentor('Felicity', ['SIP'], 'CFS CFS'),
-        Mentor('Ambrosia', ['Ducks'], 'Quack'),
+        Mentor('Ambrosia', ['SIP'], 'Quack'),
     ]

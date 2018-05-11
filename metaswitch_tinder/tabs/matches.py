@@ -9,9 +9,6 @@ from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config, matches, database
 from metaswitch_tinder.components.grid import create_equal_row
 
-current_matches = ("Empty")
-
-
 def children_no_matches():
     return [
             html.Br(),
@@ -28,10 +25,11 @@ def children_no_matches():
             html.Div(None, id='current-other-user', style={'display': 'none'}),
             html.Div(0, id='accept-match', style={'display': 'none'}),
             html.Div(0, id='reject-match', style={'display': 'none'}),
+            html.Div(None, id='completed-users', style={'display': 'none'}),
         ]
 
 
-def children_for_match(match: matches.Match):
+def children_for_match(match: matches.Match, completed_users):
     return [
             html.Br(),
             create_equal_row([
@@ -58,21 +56,23 @@ def children_for_match(match: matches.Match):
                 ], className="table-success"),
                ], className="table table-condensed"),
             html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
-            html.Div(match.other_user, id='current-other-user', style={'display': 'none'})
+            html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
+            html.Div(completed_users, id='completed-users', style={'display': 'none'})
         ]
 
 
-def get_matches_children():
-    global current_matches
-    if "Empty" in current_matches:
-        current_matches = matches.generate_matches()
+def get_matches_children(completed_users=[]):
+    current_matches = matches.generate_matches()
+    print(current_matches)
+    for user in completed_users:
+        for match in current_matches:
+            if user == match.other_user:
+                current_matches.remove(match)
     if not current_matches:
         children = children_no_matches()
-        current_matches = ("Empty")
     else:
         match = random.choice(current_matches)
-        children = children_for_match(match)
-        current_matches.remove(match)
+        children = children_for_match(match, completed_users)
     return children
 
 
@@ -106,7 +106,8 @@ def add_callbacks(app):
             State('current-other-user', 'children'),
             State('accept-match', 'n_clicks'),
             State('reject-match', 'n_clicks'),
-            State('done', 'n_clicks')
+            State('done', 'n_clicks'),
+            State('completed-users', 'children')
         ],
         [
             Event('accept-match', 'click'),
@@ -114,7 +115,7 @@ def add_callbacks(app):
             Event('done', 'click'),
         ]
     )
-    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked):
+    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked, completed_users):
         if n_done_clicked:
             return matches_done()
         if n_accept_clicked:
@@ -127,4 +128,5 @@ def add_callbacks(app):
                 matches.handle_mentee_reject_match(other_user)
             else:
                 matches.handle_mentor_reject_match(other_user)
-        return get_matches_children()
+        completed_users.append(other_user)
+        return get_matches_children(completed_users)
