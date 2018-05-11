@@ -7,7 +7,7 @@ from flask import session
 
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config, matches, database
-from metaswitch_tinder.components.grid import create_equal_row
+from metaswitch_tinder.components.grid import create_magic_three_row
 
 def children_no_matches():
     return [
@@ -32,10 +32,10 @@ def children_no_matches():
 def children_for_match(match: matches.Match, completed_users):
     return [
             html.Br(),
-            create_equal_row([
+            create_magic_three_row([
                 html.Button("✘", id='reject-match', className="btn btn-lg btn-secondary"),
                 html.Img(src=global_config.Global.CONFIG.default_user_image,
-                         className="rounded-circle", width=200, height=200),
+                         className="rounded-circle", height="100%"),
                 html.Button("✔", id='accept-match', className="btn btn-lg btn-primary"),
             ]),
             html.Br(),
