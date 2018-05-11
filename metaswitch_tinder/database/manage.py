@@ -4,6 +4,8 @@ from enum import Enum
 from random import randint
 
 from metaswitch_tinder.global_config import DATABASE as db
+from random import randint
+import time
 
 
 class User(db.Model):
@@ -11,7 +13,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     bio = db.Column(db.String(2000))
     tags = db.Column(db.String(2000))
-    requests = []
+    requests = db.Column(db.String(2000))
 
     def __init__(self, name, email, bio, tags):
         if isinstance(tags, list):
@@ -20,6 +22,7 @@ class User(db.Model):
         self.email = email
         self.bio = bio
         self.tags = tags
+        self.requests = ""
         self.mentor_matches = []
 
     def __repr__(self):
@@ -28,7 +31,8 @@ class User(db.Model):
           Email - %s      
           Bio - %s    
           Tags - %s
-        """ % (self.name, self.email, self.bio, self.tags)
+          Requests - %s
+        """ % (self.name, self.email, self.bio, self.tags, self.requests)
 
     def add(self):
         db.session.add(self)
@@ -81,9 +85,16 @@ class Request(db.Model):
 
     def add(self):
         db.session.add(self)
+
+        user = get_user(self.maker)
+        user.requests += self.id + ","
+
         db.session.commit()
         return
 
+
+def list_whole_table(table):
+    return table.query.all()
 
 def list_all_users():
     return User.query.all()
