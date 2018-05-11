@@ -6,7 +6,7 @@ from .mentor_menu import mentor_menu
 from .mentee_menu import mentee_menu
 from .signin import signin_redirected
 from .signup import signup_redirected
-from . import mentee_landing_page, mentor_landing_page, signup, signin
+from . import mentee_landing_page, mentor_landing_page, signup, signin, report
 
 
 pages = {
@@ -21,4 +21,5 @@ pages = {
     '/mentee-signup': signup_redirected('/mentee-landing-page'),
     '/mentee-menu': mentee_menu,
     '/mentee-landing-page': mentee_landing_page.mentee_landing_page,
+    '/report': report.report,
 }

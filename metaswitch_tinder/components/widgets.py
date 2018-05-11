@@ -14,7 +14,7 @@ def logout_button():
 def report_button():
     return html.A(html.Button("Report", id='report',
                               className="btn btn-primary btn-block btn-danger"),
-                  href='/', id='dummy')
+                  href='/report', id='report')
 
 
 def add_callbacks(app):

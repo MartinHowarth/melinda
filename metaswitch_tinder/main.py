@@ -99,6 +99,7 @@ def display_tab(value):
 
 
 pages.mentee_landing_page.add_callbacks(app)
+pages.report.add_callbacks(app)
 pages.signup.add_callbacks(app)
 pages.signin.add_callbacks(app)
 tabs.matches.add_callbacks(app)
