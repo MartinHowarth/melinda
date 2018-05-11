@@ -43,6 +43,7 @@ setup(
         'munch',
         'requests',
         'schematics',
+        'sendgrid',
         'alembic',
         'Flask-Migrate',
         'Flask-Script',
