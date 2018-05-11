@@ -54,6 +54,8 @@ def load_config_from_env() -> MetaswitchTinder:
 config = MetaswitchTinder(example_config.config, partial=False)
 config.validate()
 
+global_config.Global.CONFIG = config
+
 server = Flask(__name__)
 
 server.secret_key = os.environ.get('secret_key', 'secret')
@@ -88,6 +90,7 @@ def display_tab(value):
 pages.mentee_landing_page.add_callbacks(app)
 pages.signup.add_callbacks(app)
 pages.signin.add_callbacks(app)
+tabs.matches.add_callbacks(app)
 
 
 if __name__ == "__main__":

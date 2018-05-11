@@ -3,6 +3,7 @@ import dash_html_components as html
 
 from dash.dependencies import Input, Output, State, Event
 
+import metaswitch_tinder.database.matches
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
@@ -13,6 +14,7 @@ NAME = __name__.replace('.', '')
 
 
 def mentee_landing_page(config: MetaswitchTinder):
+    global_config.Global.IS_MENTEE = True
     if global_config.Global.USERNAME:
         is_signed_in_fields = [
             html.H4("Welcome {}!".format(global_config.Global.USERNAME),
@@ -66,5 +68,5 @@ def add_callbacks(app):
         [Event('submit-{}'.format(NAME), 'click')]
     )
     def submit_mentee_information(email, categories, details):
-        database.input.handle_mentee_submit(email, categories, details)
+        metaswitch_tinder.database.matches.handle_mentee_added_request(email, categories, details)
         return

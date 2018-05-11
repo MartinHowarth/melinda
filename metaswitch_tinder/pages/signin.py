@@ -42,5 +42,5 @@ def add_callbacks(app):
     def submit_signup_information(username):
         print("here")
         global_config.Global.USERNAME = username
-        database.input.handle_signin_submit(username)
+        database.identity.handle_signin_submit(username)
         return

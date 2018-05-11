@@ -14,6 +14,7 @@ NAME = __name__.replace('.', '')
 
 def signup_redirected(next_page):
     def signup(config: MetaswitchTinder=None):
+        global_config.Global.IS_MENTEE = False
         return html.Div([
             html.H1("Metaswitch Tinder", className="text-center"),
             html.Br(),
@@ -53,5 +54,5 @@ def add_callbacks(app):
     )
     def submit_signup_information(username, email, biography):
         global_config.Global.USERNAME = username
-        database.input.handle_signup_submit(username, email, biography)
+        database.identity.handle_signup_submit(username, email, biography)
         return
