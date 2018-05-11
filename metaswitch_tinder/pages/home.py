@@ -12,7 +12,7 @@ def home(config: MetaswitchTinder):
                "at Metaswitch.",
                className="lead"),
         create_equal_row([
-            html.A("I'm a mentor!", href='/mentor-signup', className="btn btn-lg btn-secondary"),
+            html.A("I'm a mentor!", href='/mentor-landing-page', className="btn btn-lg btn-secondary"),
             html.A("I'm a mentee!", href='/mentee-landing-page', className="btn btn-lg btn-primary"),
         ])
     ],
