@@ -7,7 +7,7 @@ from flask import session
 from metaswitch_tinder import global_config
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder import database, pages
-
+from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
 
 NAME = __name__.replace('.', '')
 
@@ -28,16 +28,15 @@ def signup_redirected(next_page):
                 dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
             ]),
             html.Br(),
-            create_equal_row([
-                html.Label('Biography:'),
-                dcc.Input(value='Loves ducks', type='text', id='biography-{}'.format(NAME)),
-            ]),
+            create_equal_row([html.Label('Biography:')]),
+            dcc.Textarea(placeholder='Enter a biography', value='Loves ducks', id='biography-{}'.format(NAME), style={'width':'100%'}),
             html.Br(),
             create_equal_row([html.Label('Mentoring topics:')]),
-            create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
+            multi_dropdown_with_tags(database.tags.get_tags(), 'categories-{}'.format(NAME)),
             html.Br(),
             create_equal_row([html.Label('Additional topic tags:')]),
-            create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
+            create_equal_row([dcc.Input(placeholder='e.g. \"python\", \"object-oriented design\", \"session-based testing\"',
+                                        value='', type='text', id='details-{}'.format(NAME))]),
             html.Br(),
             html.Button("Submit!", id='submit-{}'.format(NAME),
                         n_clicks=0, className="btn btn-lg btn-primary btn-block"),
