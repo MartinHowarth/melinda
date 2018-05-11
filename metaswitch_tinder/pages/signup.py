@@ -19,25 +19,31 @@ def signup_redirected(next_page):
             html.H1("Metaswitch Tinder", className="text-center"),
             html.Br(),
             create_equal_row([
-                html.Label('Username:', className="text-center"),
+                html.Label('Username:', ),
                 dcc.Input(value='', type='text', id='username-{}'.format(NAME)),
             ]),
             html.Br(),
             create_equal_row([
-                html.Label('Email:', className="text-center"),
+                html.Label('Email:'),
                 dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
             ]),
             html.Br(),
             create_equal_row([
-                html.Label('Biography:', className="text-center"),
+                html.Label('Biography:'),
                 dcc.Input(value='Loves ducks', type='text', id='biography-{}'.format(NAME)),
             ]),
             html.Br(),
+            create_equal_row([html.Label('Mentoring topics:')]),
+            create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
+            html.Br(),
+            create_equal_row([html.Label('Additional topic tags:')]),
+            create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
+            html.Br(),
             html.A(html.Button("Submit!", id='submit-{}'.format(NAME),
                                n_clicks=0, className="btn btn-lg btn-primary btn-block"),
-                   href=next_page)
-        ],
-            className="container", id='signup')
+                   href=next_page),
+            html.Br(),
+        ], className="container", id='signup')
     return signup
 
 
