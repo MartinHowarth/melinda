@@ -7,7 +7,7 @@ from flask import session
 from metaswitch_tinder import global_config
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder import database
-
+from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
 
 NAME = __name__.replace('.', '')
 
@@ -32,8 +32,7 @@ def signup_redirected(next_page):
             dcc.Textarea(placeholder='Enter a biography', value='Loves ducks', id='biography-{}'.format(NAME), style={'width':'100%'}),
             html.Br(),
             create_equal_row([html.Label('Mentoring topics:')]),
-            create_equal_row([dcc.Input(placeholder='e.g. \"Coding\", \"Design\", \"SIP\", \"Networking Protocols\", \"Pastoral Support\" ',
-                                        value='', type='text', id='tags-{}'.format(NAME))]),
+            multi_dropdown_with_tags(database.tags.get_tags(), 'categories-{}'.format(NAME)),
             html.Br(),
             create_equal_row([html.Label('Additional topic tags:')]),
             create_equal_row([dcc.Input(placeholder='e.g. \"python\", \"object-oriented design\", \"session-based testing\"',
