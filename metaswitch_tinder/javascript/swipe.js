@@ -35,7 +35,7 @@ evt.dataTransfer.setDragImage(img, 220, 20);
 }
 
 function handleTouchStart(evt) {
-  evt.preventDefault();
+  //evt.preventDefault();
   xDown = evt.touches[0].clientX;
 };
 
