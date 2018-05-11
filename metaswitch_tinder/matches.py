@@ -70,8 +70,18 @@ def generate_matches() -> List[Match]:
         return []
 
     if 'is_mentee' in session and session['is_mentee']:
-        return matches_for_mentee(mentor_tag_map, database.manage.get_user(session['username']))
-    return matches_for_mentor(request_tag_map, database.manage.get_user(session['username']))
+        matches = matches_for_mentee(mentor_tag_map, database.manage.get_user(session['username']))
+    else:
+        matches = matches_for_mentor(request_tag_map, database.manage.get_user(session['username']))
+
+    unique_users = list(set([match.other_user for match in matches]))
+
+    unique_matches = []
+    for match in matches:
+        if match.other_user in unique_users:
+            unique_users.remove(match.other_user)
+            unique_matches.append(match)
+    return unique_matches
 
 
 def handle_mentee_reject_match(matched_user, request_id):
