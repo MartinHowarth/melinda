@@ -15,6 +15,9 @@ class Match:
         self.your_tags = your_tags
         self.request_id = request_id
 
+    def __repr__(self):
+        return "<Match({self.other_user}, {self.their_tags}, {self.bio}, {self.your_tags}, {self.request_id})".format(self=self)
+
 
 def tag_to_mentor_mapping(mentors: List[database.manage.User]) -> Dict[str, List[database.manage.Request]]:
     tag_map = defaultdict(list)
@@ -38,7 +41,7 @@ def matches_for_mentee(mentor_tag_map, mentee: database.manage.User) -> List[Mat
     for request in mentee.get_requests():
         possible_mentors = list(itertools.chain(*[mentor_tag_map[tag] for tag in request.tags]))
         if possible_mentors:
-            matches.extend([Match(mentor.username, mentor.tags, mentor.bio, request.tags, request.id)
+            matches.extend([Match(mentor.name, mentor.tags, mentor.bio, request.tags, request.id)
                             for mentor in possible_mentors])
     return matches
 

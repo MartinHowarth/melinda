@@ -1,12 +1,19 @@
-from .manage import User, Request, get_request_by_id, get_user, list_whole_table
+from .manage import User, Request, get_request_by_id, get_user, list_all_users, list_all_requests, list_whole_table
 
 
-def handle_mentee_added_request(username, email, categories, details):
-    print("Mentee submitted:", username, email, categories, details)
-    mentee = User(username, email, '', '', '')
-    mentee.add()
+def handle_mentee_add_request(username, categories, details):
+    print("Mentee added request:", username, categories, details)
     request = Request(username, categories, details)
     request.add()
+    print(list_all_users())
+    print(list_all_requests())
+
+
+def handle_mentee_signup_and_request(username, email, categories, details):
+    print("Mentee signup and request:", username, email, categories, details)
+    mentee = User(username, email, '', '', '')
+    mentee.add()
+    handle_mentee_add_request(username, categories, details)
     print(list_whole_table(Request))
     print(list_whole_table(User))
 

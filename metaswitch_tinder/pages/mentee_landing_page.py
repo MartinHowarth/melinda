@@ -7,7 +7,7 @@ from flask import session
 import metaswitch_tinder.database.matches
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
-from metaswitch_tinder import database
+from metaswitch_tinder import database, pages
 
 
 NAME = __name__.replace('.', '')
@@ -61,10 +61,10 @@ def mentee_landing_page():
         html.Br(),
         create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
         html.Br(),
-        html.A(html.Button("Submit my request!",
-                           id='submit-{}'.format(NAME),
-                           className="btn btn-lg btn-success btn-block"),
-               href='/mentee-menu')
+        html.Button("Submit my request!",
+                    id='submit-{}'.format(NAME),
+                    className="btn btn-lg btn-success btn-block"),
+        html.Div('/mentee-menu', id='next-page', style={'display': 'none'})
     ],
         className="container", id='my-div')
 
@@ -78,12 +78,18 @@ def add_callbacks(app):
             State('email-{}'.format(NAME), 'value'),
             State('categories-{}'.format(NAME), 'value'),
             State('details-{}'.format(NAME), 'value'),
+            State('next-page', 'children'),
         ],
         [Event('submit-{}'.format(NAME), 'click')]
     )
-    def submit_mentee_information(username, email, categories, details):
+    def submit_mentee_information(username, email, categories, details, next_page):
         print('mentee submit', session)
-        session['username'] = username
+        print('submit_mentee_information', username, email, categories, details)
+        if 'username' not in session:
+            session['username'] = username
+            metaswitch_tinder.database.matches.handle_mentee_signup_and_request(username, email, categories, details)
+        else:
+            # If already signed in, only add the request
+            metaswitch_tinder.database.matches.handle_mentee_add_request(session['username'], categories, details)
         print('mentee submit', session)
-        metaswitch_tinder.database.matches.handle_mentee_added_request(username, email, categories, details)
-        return
+        return pages.pages[next_page]()

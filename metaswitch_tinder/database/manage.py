@@ -34,7 +34,7 @@ class Request(db.Model):
         self.maker = maker
         self.tags = tags
         self.comment = comment
-        self.state = state
+        self.state = state.value
 
         if isinstance(self.tags, list):
             self.tags = ",".join(self.tags)
@@ -117,7 +117,11 @@ def list_all_users():
     return User.query.all()
 
 
-def get_user(match_name):
+def list_all_requests():
+    return Request.query.all()
+
+
+def get_user(match_name) -> User:
     return User.query.filter_by(name=match_name).first()
 
 
