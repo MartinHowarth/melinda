@@ -6,7 +6,6 @@ from typing import List
 
 from metaswitch_tinder.global_config import DATABASE as db
 
-
 class Request(db.Model):
     """
     id - Randomly generated "unique" ID of request
@@ -23,6 +22,7 @@ class Request(db.Model):
     tags = db.Column(db.String(2000))
     comment = db.Column(db.String(2000))
     state = db.Column(db.String(80))
+    mentor_matches = db.Column(db.String(2000))
 
     class State(Enum):
         UNMATCHED = 'unmatched'
@@ -76,7 +76,7 @@ class User(db.Model):
         self.bio = bio
         self.tags = tags
         self.requests = ""
-        self.mentor_matches = []
+        self.mentor_matches = ""
 
     def __repr__(self):
         return """
@@ -100,6 +100,10 @@ class User(db.Model):
         requests = [get_request_by_id(_id) for _id in request_ids.split(',')]
         requests = [req for req in requests if req is not None]
         return requests
+
+    def add_mentor_match(self, match):
+        self.mentor_matches += match
+        db.session.commit()
 
 
 def list_whole_table(table):
