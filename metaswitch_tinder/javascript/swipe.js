@@ -10,7 +10,6 @@ function result(user_choice) {
 }
 // On click and drag
 document.addEventListener('dragstart', handleDragStart, false);
-document.addEventListener('drag', handleDrag, false);
 document.addEventListener('drop', handleDragEnd, false);
 document.addEventListener('dragover', handleDragOver, false);
 
@@ -26,29 +25,12 @@ function handleDragStart(evt) {
   swipe_gif = "https://preview.ibb.co/eLrFdy/swipe.gif";
   setDragGhost(swipe_gif, evt);
   }
-};
 
 function setDragGhost(url, evt) {
 var img = document.createElement("img");
 img.src = url
 evt.dataTransfer.setDragImage(img, 220, 20);
 }
-
-function handleDrag(evt) {
-  var xCurr = evt.clientX;
-  xDiff = xDown - xCurr;
-  if ( xDiff > 100 ) {
-    red_x = "http://www.clker.com/cliparts/M/F/9/r/c/6/x-mark-red-hi.png";
-    setDragGhost(red_x, evt);
-  } else if ( xDiff < -100 ) {
-    green_tick = "https://1001freedownloads.s3.amazonaws.com/vector/thumb/86415/Kliponious-green-tick.png";
-    setDragGhost(green_tick, evt);
-  } else {
-    swipe_gif = "https://preview.ibb.co/eLrFdy/swipe.gif";
-    setDragGhost(swipe_gif, evt);
-  }
-};
-
 
 function handleTouchStart(evt) {
   xDown = evt.touches[0].clientX;
