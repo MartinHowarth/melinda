@@ -28,6 +28,11 @@ def signup_redirected(next_page):
                 dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
             ]),
             html.Br(),
+            create_equal_row([
+                html.Label('Location:', ),
+                dcc.Input(value='', placeholder='Which office are you in?', type='text', id='location-{}'.format(NAME)),
+            ]),
+            html.Br(),
             create_equal_row([html.Label('Biography:')]),
             dcc.Textarea(placeholder='Enter a biography', value='Loves ducks', id='biography-{}'.format(NAME), style={'width':'100%'}),
             html.Br(),

@@ -67,6 +67,7 @@ class User(db.Model):
     bio = db.Column(db.String(2000))
     tags = db.Column(db.String(2000))
     mentoring_details = db.Column(db.String(2000))
+    mentor_matches = db.Column(db.String(2000))
     requests = db.Column(db.String(2000))
 
     def __init__(self, name, email, bio, tags, mentoring_details):
@@ -78,7 +79,7 @@ class User(db.Model):
         self.tags = tags
         self.requests = ""
         self.mentoring_details = mentoring_details
-        self.mentor_matches = []
+        self.mentor_matches = ""
 
     def __repr__(self):
         return """
@@ -102,6 +103,10 @@ class User(db.Model):
         requests = [get_request_by_id(_id) for _id in request_ids.split(',')]
         requests = [req for req in requests if req is not None]
         return requests
+
+    def add_mentor_match(self, match):
+        self.mentor_matches += ',' + match
+        db.session.commit()
 
 
 def list_whole_table(table):
