@@ -38,6 +38,7 @@ def children_for_match(match: matches.Match, completed_users):
                          className="rounded-circle", height="100%"),
                 html.Button("✔", id='accept-match', className="btn btn-lg btn-primary"),
             ]),
+
             html.Br(),
             html.Br(),
             html.Br(),

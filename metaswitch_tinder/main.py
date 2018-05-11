@@ -78,6 +78,7 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
+app.title = "Metaswitch Tinder"
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
