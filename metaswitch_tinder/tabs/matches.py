@@ -93,8 +93,6 @@ def matches_done():
         html.A(html.Button("Make another request?", className="btn btn-primary btn-lg btn-block"),
                href='/mentee-landing-page'),
         html.Br(),
-        html.A(html.Button("Create account?", className="btn btn-primary btn-lg btn-block"),
-               href='/mentee-signup')
     ]
 
 

@@ -3,4 +3,4 @@ from metaswitch_tinder.database.manage import User, list_all_users, get_user
 
 
 def mentor_menu():
-    return generate_tabs({'Messages': 'messages', 'Matches': 'matches'}, 'matches')
+    return generate_tabs({'Messages': 'messages', 'Matches': 'matches', 'Settings': 'settings'}, 'matches')
