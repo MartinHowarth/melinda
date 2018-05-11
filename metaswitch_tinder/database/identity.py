@@ -1,9 +1,9 @@
 from .manage import User, list_all_users
 
 
-def handle_signup_submit(username, email, biography):
+def handle_signup_submit(username, email, biography, categories, details):
     print("Signup submitted:", username, email, biography)
-    new_user = User(username, email, biography, '')
+    new_user = User(username, email, biography, categories, details)
     new_user.add()
 
 

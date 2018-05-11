@@ -66,9 +66,10 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     bio = db.Column(db.String(2000))
     tags = db.Column(db.String(2000))
+    mentoring_details = db.Column(db.String(2000))
     requests = db.Column(db.String(2000))
 
-    def __init__(self, name, email, bio, tags):
+    def __init__(self, name, email, bio, tags, mentoring_details):
         if isinstance(tags, list):
             tags = ','.join(tags)
         self.name = name
@@ -76,6 +77,7 @@ class User(db.Model):
         self.bio = bio
         self.tags = tags
         self.requests = ""
+        self.mentoring_details = mentoring_details
         self.mentor_matches = []
 
     def __repr__(self):

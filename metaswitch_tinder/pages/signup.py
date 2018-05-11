@@ -53,11 +53,13 @@ def add_callbacks(app):
             State('username-{}'.format(NAME), 'value'),
             State('email-{}'.format(NAME), 'value'),
             State('biography-{}'.format(NAME), 'value'),
+            State('categories-{}'.format(NAME), 'value'),
+            State('details-{}'.format(NAME), 'value'),
             State('next-page', 'children'),
         ],
         [Event('submit-{}'.format(NAME), 'click')]
     )
-    def submit_signup_information(username, email, biography, next_page):
+    def submit_signup_information(username, email, biography, categories, details, next_page):
         session['username'] = username
-        database.identity.handle_signup_submit(username, email, biography)
+        database.identity.handle_signup_submit(username, email, biography, categories, details)
         return pages.pages[next_page]()
