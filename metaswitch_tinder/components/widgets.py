@@ -6,8 +6,14 @@ from flask import session
 
 
 def logout_button():
-    return html.A(html.Button("Logout!", id='logout',
-                              className="btn btn-lg btn-primary btn-block"),
+    return html.A(html.Button("Logout", id='logout',
+                              className="btn btn-primary btn-block btn-warning"),
+                  href='/', id='dummy')
+
+
+def report_button():
+    return html.A(html.Button("Report", id='report',
+                              className="btn btn-primary btn-block btn-danger"),
                   href='/', id='dummy')
 
 

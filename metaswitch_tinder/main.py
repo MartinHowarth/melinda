@@ -75,11 +75,15 @@ app.css.append_css({"external_url": config.css_cdn})
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
-    html.Div(widgets.logout_button()),
+    html.Div([html.Div(widgets.logout_button()),
+              html.Div(widgets.report_button())],
+             className="d-flex flex-row justify-content-between"),
+    html.Br(),
     html.Div(id='page-content')
 ])
 
 app.title = "Metaswitch Tinder"
+
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
