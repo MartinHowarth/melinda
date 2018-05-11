@@ -5,6 +5,7 @@ from flask import session
 from typing import Dict, List
 
 from metaswitch_tinder import database, tinder_email
+from metaswitch_tinder.database.manage import get_request_by_id
 
 
 class Match:
@@ -96,7 +97,12 @@ def handle_mentor_reject_match(matched_user, request_id):
 def handle_mentor_accept_match(matched_user, matched_tags, request_id):
     print("mentor accepted match:", matched_user, request_id)
     database.matches.handle_mentor_accept_match(request_id)
+    request = get_request_by_id(request_id)
     current_user = database.manage.get_user(session['username'])
     other_user = database.manage.get_user(matched_user)
-    tinder_email.send_email([current_user.email, other_user.email], "You've matched on " + (','.join(matched_tags)))
-    # TODO - make the email text better
+
+    email_text = "You've matched on " + (','.join(matched_tags))
+    email_text += '\n\n'
+    email_text += request.comment
+
+    tinder_email.send_email([current_user.email, other_user.email], email_text)
