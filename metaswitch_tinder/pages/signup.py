@@ -4,7 +4,6 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State, Event
 from flask import session
 
-from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder import database
@@ -14,7 +13,7 @@ NAME = __name__.replace('.', '')
 
 
 def signup_redirected(next_page):
-    def signup(config: MetaswitchTinder=None):
+    def signup():
         session['is_mentee'] = False
         return html.Div([
             html.H1("Metaswitch Tinder", className="text-center"),

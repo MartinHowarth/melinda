@@ -2,13 +2,17 @@ from metaswitch_tinder.global_config import DATABASE as db
 from random import randint
 import time
 
+
 class User(db.Model):
     name = db.Column(db.String(80), primary_key=True)
     email = db.Column(db.String(120), unique=True)
     bio = db.Column(db.String(2000))
     tags = db.Column(db.String(2000))
+    requests = []
 
     def __init__(self, name, email, bio, tags):
+        if isinstance(tags, list):
+            tags = ','.join(tags)
         self.name = name
         self.email = email
         self.bio = bio
@@ -73,6 +77,7 @@ class Request(db.Model):
 def list_all_users():
     return User.query.all()
 
+
 def get_user(match_name):
     return User.query.filter_by(name=match_name).first()
 
@@ -93,4 +98,3 @@ def delete_table(table):
     return
 
 #db.create_all()
-

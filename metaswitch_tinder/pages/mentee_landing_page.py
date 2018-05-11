@@ -8,13 +8,13 @@ import metaswitch_tinder.database.matches
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
-from metaswitch_tinder import database, global_config
+from metaswitch_tinder import database
 
 
 NAME = __name__.replace('.', '')
 
 
-def mentee_landing_page(config: MetaswitchTinder):
+def mentee_landing_page():
     session['is_mentee'] = True
     if 'username' in session:
         is_signed_in_fields = [
@@ -83,6 +83,8 @@ def add_callbacks(app):
         [Event('submit-{}'.format(NAME), 'click')]
     )
     def submit_mentee_information(username, email, categories, details):
+        print('mentee submit', session)
         session['username'] = username
+        print('mentee submit', session)
         metaswitch_tinder.database.matches.handle_mentee_added_request(username, email, categories, details)
         return
