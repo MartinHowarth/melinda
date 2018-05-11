@@ -8,6 +8,7 @@ from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder import global_config, matches, database
 from metaswitch_tinder.components.grid import create_equal_row
 
+current_matches = ("Empty")
 
 def children_no_matches():
     return [
@@ -53,11 +54,16 @@ def children_for_match(match: matches.Match):
 
 
 def get_matches_children():
-    current_matches = matches.generate_matches()
+    global current_matches
+    if "Empty" in current_matches:
+        current_matches = matches.generate_matches()
     if not current_matches:
         children = children_no_matches()
+        current_matches = ("Empty")
     else:
-        children = children_for_match(random.choice(current_matches))
+        match = random.choice(current_matches)
+        children = children_for_match(match)
+        current_matches.remove(match)
     return children
 
 
