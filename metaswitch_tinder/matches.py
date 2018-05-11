@@ -22,7 +22,7 @@ class Match:
 def tag_to_mentor_mapping(mentors: List[database.manage.User]) -> Dict[str, List[database.manage.Request]]:
     tag_map = defaultdict(list)
     for mentor in mentors:
-        for tag in mentor.tags:
+        for tag in mentor.get_tags():
             tag_map[tag].append(mentor)
     return tag_map
 
@@ -31,7 +31,7 @@ def tag_to_request_mapping(mentees: List[database.manage.User]) -> Dict[str, Lis
     tag_map = defaultdict(list)
     for mentee in mentees:
         for request in mentee.get_requests():
-            for tag in request.tags:
+            for tag in request.get_tags():
                 tag_map[tag].append(request)
     return tag_map
 
@@ -39,9 +39,9 @@ def tag_to_request_mapping(mentees: List[database.manage.User]) -> Dict[str, Lis
 def matches_for_mentee(mentor_tag_map, mentee: database.manage.User) -> List[Match]:
     matches = []
     for request in mentee.get_requests():
-        possible_mentors = list(itertools.chain(*[mentor_tag_map[tag] for tag in request.tags]))
+        possible_mentors = list(itertools.chain(*[mentor_tag_map[tag] for tag in request.get_tags()]))
         if possible_mentors:
-            matches.extend([Match(mentor.name, mentor.tags, mentor.bio, request.tags, request.id)
+            matches.extend([Match(mentor.name, mentor.get_tags(), mentor.bio, request.get_tags(), request.id)
                             for mentor in possible_mentors])
     return matches
 

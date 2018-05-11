@@ -60,6 +60,9 @@ class Request(db.Model):
     def commit(self):
         db.session.commit()
 
+    def get_tags(self):
+        return self.tags.split(',')
+
 
 class User(db.Model):
     name = db.Column(db.String(80), primary_key=True)
@@ -107,6 +110,9 @@ class User(db.Model):
     def add_mentor_match(self, match):
         self.mentor_matches += ',' + match
         db.session.commit()
+
+    def get_tags(self):
+        return self.tags.split(',')
 
 
 def list_whole_table(table):
