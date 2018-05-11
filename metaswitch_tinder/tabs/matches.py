@@ -19,7 +19,8 @@ def children_no_matches():
             html.Br(),
             html.P("Aw shucks! You're out of matches!", className="lead"),
             html.Br(),
-            html.Button("Return to start", className="btn btn-primary btn-lg btn-block"),
+            html.A(html.Button("Return to start", className="btn btn-primary btn-lg btn-block"),
+                   href='/mentee-landing-page')
         ]
 
 
