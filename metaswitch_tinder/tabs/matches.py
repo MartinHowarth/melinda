@@ -27,6 +27,7 @@ def children_no_matches():
             html.Div(0, id='reject-match', style={'display': 'none'}),
             html.Div(None, id='completed-users', style={'display': 'none'}),
             html.Div(None, id='matched-tags', style={'display': 'none'}),
+            html.Div("", id='match-request-id', style={'display': 'none'}),
         ]
 
 
