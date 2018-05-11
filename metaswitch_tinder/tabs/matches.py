@@ -35,7 +35,8 @@ def children_for_match(match: matches.Match, completed_users):
             create_magic_three_row([
                 html.Button("✘", id='reject-match', className="btn btn-lg btn-secondary"),
                 html.Img(src=global_config.Global.CONFIG.default_user_image,
-                         className="rounded-circle", height="100%"),
+                         className="rounded-circle", height="100%",
+                         id='match-img', draggable='true'),
                 html.Button("✔", id='accept-match', className="btn btn-lg btn-primary"),
             ]),
 

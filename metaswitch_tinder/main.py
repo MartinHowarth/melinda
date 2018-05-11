@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import sys
+import flask
 
 from dash.dependencies import Input, Output
 from flask import Flask, session
@@ -98,6 +99,19 @@ pages.signin.add_callbacks(app)
 tabs.matches.add_callbacks(app)
 widgets.add_callbacks(app)
 
+# Add each script to the app from the JAVASCRIPT_DIR
+for script in os.listdir('javascript'):
+    if os.path.splitext(script)[1] != '.js':
+        continue
+    app.scripts.append_script({
+        'external_url': '/static/{}'.format(script)
+    })
+
+
+# Use Flask to serve the javascript source files statically.
+@app.server.route('/static/<filename>.js')
+def serve_script(filename):
+    return flask.send_from_directory('javascript', '{}.js'.format(filename))
 
 if __name__ == "__main__":
     configure_logging()
