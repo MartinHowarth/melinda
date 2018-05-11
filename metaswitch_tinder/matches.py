@@ -56,7 +56,7 @@ def matches_for_mentor(request_tag_map, mentor: database.manage.User):
         username, request_id = match.split(':')
         mentee = database.manage.get_user(username)
         request = database.manage.get_request_by_id(request_id)
-        matches.extend([Match(mentee.name, mentee.tags, mentee.bio, request.tags, request_id)])
+        matches.extend([Match(mentee.name, request.get_tags(), mentee.bio, [], request_id)])
     return matches
 
 

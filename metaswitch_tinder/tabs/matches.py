@@ -32,8 +32,8 @@ def children_no_matches():
 
 
 def children_for_match(match: matches.Match, completed_users):
-    your_tags = match.your_tags.split(',')
-    their_tags = match.their_tags.split(',')
+    your_tags = match.your_tags
+    their_tags = match.their_tags
     return [
             html.Br(),
             create_magic_three_row([
