@@ -130,7 +130,7 @@ def add_callbacks(app):
             return matches_done()
         if n_accept_clicked:
             if session['is_mentee']:
-                matches.handle_mentee_accept_match(other_user, match_request_id)
+                matches.handle_mentee_accept_match(other_user, matched_tags, match_request_id)
             else:
                 matches.handle_mentor_accept_match(other_user, matched_tags, match_request_id)
         else:

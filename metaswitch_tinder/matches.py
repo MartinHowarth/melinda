@@ -76,12 +76,12 @@ def handle_mentee_reject_match(matched_user, request_id):
     database.matches.handle_mentee_reject_match(request_id)
 
 
-def handle_mentee_accept_match(matched_user, request_id):
+def handle_mentee_accept_match(matched_user, matched_tags, request_id):
     print("mentee accepted match:", matched_user, request_id)
     current_user = database.manage.get_user(session['username'])
     other_user = database.manage.get_user(matched_user)
     database.matches.handle_mentee_accept_match(request_id, current_user, other_user)
-    tinder_email.send_email([current_user.email, other_user.email], "You've matched on ...")
+    tinder_email.send_email([current_user.email, other_user.email], "You've matched on " + (','.join(matched_tags)))
     # TODO - make the email text better
 
     # TODO - Add the mentee to the list of matches for the mentor
