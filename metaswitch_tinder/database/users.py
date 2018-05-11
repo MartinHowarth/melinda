@@ -3,17 +3,19 @@ from typing import List
 
 class Mentee:
     # This is definitely not set in stone - just needed something to work against
-    def __init__(self, username, requests):
+    def __init__(self, username, requests, email=""):
         self.username = username
         self.requests = requests
+        self.email = email
 
 
 class Mentor:
     # This is definitely not set in stone - just needed something to work against
-    def __init__(self, username, tags: List[str], bio):
+    def __init__(self, username, tags: List[str], bio, email=""):
         self.username = username
         self.tags = tags
         self.bio = bio
+        self.email = email
 
 
 class Request:

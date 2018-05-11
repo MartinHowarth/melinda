@@ -50,7 +50,7 @@ def children_for_match(match: matches.Match, completed_users):
                 ], className="table-success"),
                 html.Tr([
                     html.Td("Tags"),
-                    html.Td(', '.join(match.tags))
+                    html.Td(', '.join(match.their_tags))
                 ], className="table-success"),
                 html.Tr([
                     html.Td("Bio"),
@@ -59,7 +59,8 @@ def children_for_match(match: matches.Match, completed_users):
                ], className="table table-condensed"),
             html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
-            html.Div(completed_users, id='completed-users', style={'display': 'none'})
+            html.Div(completed_users, id='completed-users', style={'display': 'none'}),
+            html.Div(list(set(match.their_tags) & set(match.your_tags)), id='matched-tags', style={'display': 'none'})
         ]
 
 
@@ -109,7 +110,8 @@ def add_callbacks(app):
             State('accept-match', 'n_clicks'),
             State('reject-match', 'n_clicks'),
             State('done', 'n_clicks'),
-            State('completed-users', 'children')
+            State('completed-users', 'children'),
+            State('matched-tags', 'children')
         ],
         [
             Event('accept-match', 'click'),
@@ -117,14 +119,15 @@ def add_callbacks(app):
             Event('done', 'click'),
         ]
     )
-    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked, completed_users):
+    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked, completed_users,
+                                  matched_tags):
         if n_done_clicked:
             return matches_done()
         if n_accept_clicked:
             if session['is_mentee']:
                 matches.handle_mentee_accept_match(other_user)
             else:
-                matches.handle_mentor_accept_match(other_user)
+                matches.handle_mentor_accept_match(other_user, matched_tags)
         else:
             if session['is_mentee']:
                 matches.handle_mentee_reject_match(other_user)
