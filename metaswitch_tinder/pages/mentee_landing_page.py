@@ -6,37 +6,55 @@ from dash.dependencies import Input, Output, State, Event
 from metaswitch_tinder.config_model import MetaswitchTinder
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
-from metaswitch_tinder import database
+from metaswitch_tinder import database, global_config
 
 
 NAME = __name__.replace('.', '')
 
 
 def mentee_landing_page(config: MetaswitchTinder):
+    if global_config.Global.USERNAME:
+        is_signed_in_fields = [
+            html.H4("Welcome {}!".format(global_config.Global.USERNAME),
+                    className="text-center"),
+            # Must include something with the id `email-NAME`, but hidden in this case
+            dcc.Input(value='', type='text', id='email-{}'.format(NAME), style={'display': 'none'})
+        ]
+    else:
+        is_signed_in_fields = [
+            html.A(html.Button("I have an account!",
+                               id='sign-in-{}'.format(NAME),
+                               className="btn btn-lg btn-primary btn-block"),
+                   href='/mentee-signin'),
+            html.Br(),
+            create_equal_row([
+                html.Label('Email:', className="text-center"),
+                dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
+            ]),
+        ]
+
     return html.Div([
         html.H1("Metaswitch Tinder", className="text-center"),
         html.Br(),
-        html.Button("I have an account!", id='sign-in-{}'.format(NAME), className="btn btn-lg btn-primary btn-block"),
+        *is_signed_in_fields,
         html.Br(),
-        create_equal_row([
-            html.Label('Email:', className="text-center"),
-            dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
-        ]),
-        html.Br(),
-        html.H4('I want to learn about...', className="text-center"),
+        html.H4('What do you want to learn about?', className="text-center"),
         html.Br(),
         multi_dropdown_with_tags(database.tags.get_tags(), 'categories-{}'.format(NAME)),
         html.Br(),
-        html.H4('Specifically regarding...', className="text-center"),
+        html.H4('What specifically about that?', className="text-center"),
         html.Br(),
         create_equal_row([dcc.Input(value='', type='text', id='details-{}'.format(NAME))]),
         html.Br(),
-        html.Button("Submit!", id='submit-{}'.format(NAME), n_clicks=0, className="btn btn-lg btn-primary btn-block"),
+        html.A(html.Button("Submit!",
+                           id='submit-{}'.format(NAME),
+                           className="btn btn-lg btn-primary btn-block"),
+               href='/mentee-menu')
     ],
         className="container", id='my-div')
 
 
-def add_submit_callback(app):
+def add_callbacks(app):
     @app.callback(
         Output('my-div'.format(NAME), 'children'),
         [],
@@ -48,6 +66,5 @@ def add_submit_callback(app):
         [Event('submit-{}'.format(NAME), 'click')]
     )
     def submit_mentee_information(email, categories, details):
-        database.input.handle_mentee_submit(email, categories,details)
-        # TODO link to next page
-        return html.Div("Submitted! %s, %s %s" % (email, categories, details))
+        database.input.handle_mentee_submit(email, categories, details)
+        return

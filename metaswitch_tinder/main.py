@@ -84,8 +84,12 @@ def display_page(pathname):
 def display_tab(value):
     return tabs.tabs[value](config)
 
-pages.mentee_landing_page.add_submit_callback(app)
+
+pages.mentee_landing_page.add_callbacks(app)
+pages.signup.add_callbacks(app)
+pages.signin.add_callbacks(app)
+
 
 if __name__ == "__main__":
     configure_logging()
-    app.run_server(threaded=True, port=int(os.environ.get('PORT', 80)), debug=True)
+    app.run_server(port=int(os.environ.get('PORT', 80)), debug=True)
