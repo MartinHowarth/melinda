@@ -30,7 +30,7 @@ def signup_redirected(next_page):
             html.Br(),
             create_equal_row([
                 html.Label('Location:', ),
-                dcc.Input(value='', placeholder='Which office are you in?', type='text', id='username-{}'.format(NAME)),
+                dcc.Input(value='', placeholder='Which office are you in?', type='text', id='location-{}'.format(NAME)),
             ]),
             html.Br(),
             create_equal_row([html.Label('Biography:')]),
