@@ -4,10 +4,10 @@ import dash_html_components as html
 from typing import Dict
 
 
-def generate_tabs(tabs: Dict[str, html.Div], default_tab_value: html.Div) -> html.Div:
+def generate_tabs(tabs: Dict[str, html.Div], default_tab: html.Div) -> html.Div:
     """
     :param tabs: Dict of {"tab_name": html.Div(tab contents)}
-    :param default_tab_value: The default value to display
+    :param default_tab: The default tab (by name) to display
     :return: html.Div for the tabs.
     """
     formatted_dict = [
@@ -17,7 +17,7 @@ def generate_tabs(tabs: Dict[str, html.Div], default_tab_value: html.Div) -> htm
     return html.Div([
         dcc.Tabs(
             tabs=formatted_dict,
-            value=default_tab_value,
+            value=default_tab,
             id='tabs'
         ),
         html.Div(id='tab-content')

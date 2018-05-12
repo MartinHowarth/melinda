@@ -62,6 +62,13 @@ def generate_structure():
         settings,
     )
 
+    # The keys of this dictionary are the `href`s for each page.
+    # The `module` key of each dictionary must define a `layout` method that
+    #   returns the dash `html` object to display on that page.
+    # The `links` key is a dictionary of {link-name: href} for each link on the page.
+
+    # Links from tabs are also controlled in this way.
+    # Links to tabs should instead be defined in the `tabs.__init__.py` mapping.
     app_globals.structure = {
         module_href(home): {
             'module': home,
