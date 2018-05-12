@@ -12,4 +12,3 @@ class MetaswitchTinder(Model):
     sad_ducks = ListType(URLType(required=True))
     serious_ducks = ListType(URLType(required=True))
     report_email_address = EmailType(required=True)
-    DATABASE_URL = StringType(required=True)
