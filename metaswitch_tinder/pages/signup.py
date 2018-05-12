@@ -4,16 +4,16 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State, Event
 from flask import session
 
-from metaswitch_tinder import global_config
+from metaswitch_tinder import database
+from metaswitch_tinder.app import app
 from metaswitch_tinder.components.grid import create_equal_row
-from metaswitch_tinder import database, pages
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
 
 NAME = __name__.replace('.', '')
 
 
 def signup_redirected(next_page):
-    def signup():
+    def layout():
         session['is_mentee'] = False
         return html.Div([
             html.H1("Metaswitch Tinder", className="text-center"),
@@ -43,28 +43,25 @@ def signup_redirected(next_page):
             create_equal_row([dcc.Input(placeholder='e.g. \"python\", \"object-oriented design\", \"session-based testing\"',
                                         value='', type='text', id='details-{}'.format(NAME))]),
             html.Br(),
-            html.Button("Submit!", id='submit-{}'.format(NAME),
-                        n_clicks=0, className="btn btn-lg btn-primary btn-block"),
-            html.Div(next_page, id='next-page', style={'display': 'none'})
+            dcc.Link(html.Button("Submit!", id='submit-{}'.format(NAME),
+                                 n_clicks=0, className="btn btn-lg btn-primary btn-block"),
+                     href=next_page),
         ], className="container", id='signup')
-    return signup
+    return layout
 
 
-def add_callbacks(app):
-    @app.callback(
-        Output('signup', 'children'),
-        [],
-        [
-            State('username-{}'.format(NAME), 'value'),
-            State('email-{}'.format(NAME), 'value'),
-            State('biography-{}'.format(NAME), 'value'),
-            State('categories-{}'.format(NAME), 'value'),
-            State('details-{}'.format(NAME), 'value'),
-            State('next-page', 'children'),
-        ],
-        [Event('submit-{}'.format(NAME), 'click')]
-    )
-    def submit_signup_information(username, email, biography, categories, details, next_page):
-        session['username'] = username
-        database.identity.handle_signup_submit(username, email, biography, categories, details)
-        return pages.pages[next_page]()
+@app.callback(
+    Output('signup', 'children'),
+    [],
+    [
+        State('username-{}'.format(NAME), 'value'),
+        State('email-{}'.format(NAME), 'value'),
+        State('biography-{}'.format(NAME), 'value'),
+        State('categories-{}'.format(NAME), 'value'),
+        State('details-{}'.format(NAME), 'value'),
+    ],
+    [Event('submit-{}'.format(NAME), 'click')]
+)
+def submit_signup_information(username, email, biography, categories, details):
+    session['username'] = username
+    database.identity.handle_signup_submit(username, email, biography, categories, details)

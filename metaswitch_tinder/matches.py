@@ -1,3 +1,5 @@
+"""Module to handle generating matches and handling match requests from mentors and mentees."""
+
 import itertools
 
 from collections import defaultdict
@@ -9,7 +11,7 @@ from metaswitch_tinder.database.manage import get_request_by_id
 
 
 class Match:
-    def __init__(self, other_user, their_tags, bio, your_tags, request_id):
+    def __init__(self, other_user: str, their_tags: List[str], bio: str, your_tags: List[str], request_id: str):
         self.other_user = other_user
         self.their_tags = their_tags
         self.bio = bio
@@ -17,10 +19,11 @@ class Match:
         self.request_id = request_id
 
     def __repr__(self):
-        return "<Match({self.other_user}, {self.their_tags}, {self.bio}, {self.your_tags}, {self.request_id})".format(self=self)
+        return "<Match({self.other_user}, {self.their_tags}, {self.bio}, {self.your_tags}, {self.request_id})".format(
+            self=self)
 
 
-def tag_to_mentor_mapping(mentors: List[database.manage.User]) -> Dict[str, List[database.manage.Request]]:
+def tag_to_mentor_mapping(mentors: List[database.manage.User]) -> Dict[str, List[database.manage.User]]:
     tag_map = defaultdict(list)
     for mentor in mentors:
         for tag in mentor.get_tags():
@@ -37,7 +40,8 @@ def tag_to_request_mapping(mentees: List[database.manage.User]) -> Dict[str, Lis
     return tag_map
 
 
-def matches_for_mentee(mentor_tag_map, mentee: database.manage.User) -> List[Match]:
+def matches_for_mentee(mentor_tag_map: Dict[str, List[database.manage.User]],
+                       mentee: database.manage.User) -> List[Match]:
     matches = []
     for request in mentee.get_requests():
         possible_mentors = list(itertools.chain(*[mentor_tag_map[tag] for tag in request.get_tags()]))
@@ -84,24 +88,24 @@ def generate_matches() -> List[Match]:
     return unique_matches
 
 
-def handle_mentee_reject_match(matched_user, request_id):
+def handle_mentee_reject_match(matched_user: str, request_id: str):
     print("mentee rejected match:", matched_user, request_id)
     database.matches.handle_mentee_reject_match(request_id)
 
 
-def handle_mentee_accept_match(matched_user, matched_tags, request_id):
+def handle_mentee_accept_match(matched_user: str, matched_tags: List[str], request_id: str):
     print("mentee accepted match:", matched_user, request_id)
     current_user = database.manage.get_user(session['username'])
     other_user = database.manage.get_user(matched_user)
     database.matches.handle_mentee_accept_match(request_id, current_user, other_user)
 
 
-def handle_mentor_reject_match(matched_user, request_id):
+def handle_mentor_reject_match(matched_user: str, request_id: str):
     print("mentor rejected match:", matched_user, request_id)
     database.matches.handle_mentor_reject_match(request_id)
 
 
-def handle_mentor_accept_match(matched_user, matched_tags, request_id):
+def handle_mentor_accept_match(matched_user: str, matched_tags: List[str], request_id: str):
     print("mentor accepted match:", matched_user, request_id)
     database.matches.handle_mentor_accept_match(request_id)
     request = get_request_by_id(request_id)
@@ -112,4 +116,4 @@ def handle_mentor_accept_match(matched_user, matched_tags, request_id):
     email_text += '\n\n'
     email_text += request.comment
 
-    tinder_email.send_email([current_user.email, other_user.email], email_text)
+    tinder_email.send_match_email([current_user.email, other_user.email], email_text)

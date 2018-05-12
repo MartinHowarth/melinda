@@ -4,7 +4,7 @@ from enum import Enum
 from random import randint
 from typing import List
 
-from metaswitch_tinder.global_config import DATABASE as db
+from metaswitch_tinder.app import db
 
 
 class Request(db.Model):

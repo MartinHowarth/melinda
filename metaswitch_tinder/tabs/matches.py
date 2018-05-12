@@ -5,23 +5,25 @@ import random
 from dash.dependencies import Input, Output, State, Event
 from flask import session
 
-from metaswitch_tinder import global_config, matches, database
+from metaswitch_tinder import matches
+from metaswitch_tinder.app import app, config
 from metaswitch_tinder.components.grid import create_magic_three_row
 
 
 def children_no_matches():
     return [
             html.Br(),
-            html.Img(src=random.choice(global_config.Global.CONFIG.sad_ducks),
+            html.Img(src=random.choice(config.sad_ducks),
                      className="rounded-circle", width=200, height=200, id='no-match'),
             html.Br(),
             html.Br(),
             html.P("Aw shucks! You're out of matches!", className="lead"),
             html.Br(),
-            html.A(html.Button("Return to start", className="btn btn-primary btn-lg btn-block"),
-                   href='/mentee-landing-page'),
+            dcc.Link(html.Button("Return to start", className="btn btn-primary btn-lg btn-block"),
+                     href='/mentee-landing-page'),
             html.Br(),
-            html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
+            dcc.Link(html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
+                     href='/mentee-matches-done'),
             html.Div(None, id='current-other-user', style={'display': 'none'}),
             html.Div(0, id='accept-match', style={'display': 'none'}),
             html.Div(0, id='reject-match', style={'display': 'none'}),
@@ -38,7 +40,7 @@ def children_for_match(match: matches.Match, completed_users):
             html.Br(),
             create_magic_three_row([
                 html.Button("✘", id='reject-match', className="btn btn-lg btn-secondary"),
-                html.Img(src=global_config.Global.CONFIG.default_user_image,
+                html.Img(src=config.default_user_image,
                          className="rounded-circle", height="100%",
                          id='match-img', draggable='true'),
                 html.Button("✔", id='accept-match', className="btn btn-lg btn-primary"),
@@ -61,7 +63,8 @@ def children_for_match(match: matches.Match, completed_users):
                     html.Td(match.bio)
                 ], className="table-success"),
                ], className="table table-condensed"),
-            html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
+            dcc.Link(html.Button("Done", id='done', className="btn btn-primary btn-lg btn-block"),
+                     href='/mentee-matches-done'),
             html.Div(match.other_user, id='current-other-user', style={'display': 'none'}),
             html.Div(completed_users, id='completed-users', style={'display': 'none'}),
             html.Div(list(set(their_tags) & set(your_tags)), id='matched-tags', style={'display': 'none'}),
@@ -84,18 +87,6 @@ def get_matches_children(completed_users=list()):
     return children
 
 
-def matches_done():
-    return [
-        html.Br(),
-        html.H4("Thanks, your request has been submitted",
-                className="text-center"),
-        html.Br(),
-        html.A(html.Button("Make another request?", className="btn btn-primary btn-lg btn-block"),
-               href='/mentee-landing-page'),
-        html.Br(),
-    ]
-
-
 def matches_tab():
     print('matches', session)
     return html.Div(
@@ -105,38 +96,33 @@ def matches_tab():
     )
 
 
-def add_callbacks(app):
-    @app.callback(
-        Output('match-div', 'children'),
-        [],
-        [
-            State('current-other-user', 'children'),
-            State('accept-match', 'n_clicks'),
-            State('reject-match', 'n_clicks'),
-            State('done', 'n_clicks'),
-            State('completed-users', 'children'),
-            State('matched-tags', 'children'),
-            State('matched-request-id', 'children')
-        ],
-        [
-            Event('accept-match', 'click'),
-            Event('reject-match', 'click'),
-            Event('done', 'click'),
-        ]
-    )
-    def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, n_done_clicked, completed_users,
-                                  matched_tags, match_request_id):
-        if n_done_clicked:
-            return matches_done()
-        if n_accept_clicked:
-            if session['is_mentee']:
-                matches.handle_mentee_accept_match(other_user, matched_tags, match_request_id)
-            else:
-                matches.handle_mentor_accept_match(other_user, matched_tags, match_request_id)
+@app.callback(
+    Output('match-div', 'children'),
+    [],
+    [
+        State('current-other-user', 'children'),
+        State('accept-match', 'n_clicks'),
+        State('reject-match', 'n_clicks'),
+        State('completed-users', 'children'),
+        State('matched-tags', 'children'),
+        State('matched-request-id', 'children')
+    ],
+    [
+        Event('accept-match', 'click'),
+        Event('reject-match', 'click'),
+    ]
+)
+def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, completed_users,
+                              matched_tags, match_request_id):
+    if n_accept_clicked:
+        if session['is_mentee']:
+            matches.handle_mentee_accept_match(other_user, matched_tags, match_request_id)
         else:
-            if session['is_mentee']:
-                matches.handle_mentee_reject_match(other_user, match_request_id)
-            else:
-                matches.handle_mentor_reject_match(other_user, match_request_id)
-        completed_users.append(other_user)
-        return get_matches_children(completed_users)
+            matches.handle_mentor_accept_match(other_user, matched_tags, match_request_id)
+    else:
+        if session['is_mentee']:
+            matches.handle_mentee_reject_match(other_user, match_request_id)
+        else:
+            matches.handle_mentor_reject_match(other_user, match_request_id)
+    completed_users.append(other_user)
+    return get_matches_children(completed_users)

@@ -39,6 +39,7 @@ def create_equal_grid(elements):
 def create_equal_row(elements):
     return create_equal_grid([elements])
 
+
 def create_magic_three_grid(elements):
     """
 

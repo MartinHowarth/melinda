@@ -1,1 +1,1 @@
-from .main import server
+from .app import server

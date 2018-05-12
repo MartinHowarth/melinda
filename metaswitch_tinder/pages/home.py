@@ -1,12 +1,15 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import logging
 
 from flask import session
 
 from metaswitch_tinder.components.grid import create_equal_row
 
+log = logging.getLogger(__name__)
 
-def home():
+
+def layout():
     if 'username' in session:
         # Already logged in, skip the signin page
         mentor_href = '/mentor-menu'
@@ -19,8 +22,9 @@ def home():
                "at Metaswitch.",
                className="lead"),
         create_equal_row([
-            html.A("I'm a mentor!", href=mentor_href, className="btn btn-lg btn-secondary"),
-            html.A("I'm a mentee!", href='/mentee-landing-page', className="btn btn-lg btn-primary"),
-        ])
+            dcc.Link("I'm a mentor!", href=mentor_href, className="btn btn-lg btn-secondary"),
+            dcc.Link("I'm a mentee!", href='/mentee-landing-page', className="btn btn-lg btn-primary"),
+        ]),
     ],
-        className="container text-center",)
+        className="container text-center",
+    )
