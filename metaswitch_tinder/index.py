@@ -8,27 +8,13 @@ import sys
 import flask
 
 import metaswitch_tinder.pages.report
+
+from metaswitch_tinder import tabs, app_structure, app_globals
 from metaswitch_tinder.app import app
 from metaswitch_tinder.app_config import config
 from metaswitch_tinder.components import widgets
-from metaswitch_tinder.constants import JAVASCRIPT_DIR
+from metaswitch_tinder.app_globals import JAVASCRIPT_DIR
 
-
-from metaswitch_tinder import tabs, pages
-from metaswitch_tinder.pages import (
-    easter,
-    page_1,
-    page_2,
-    mentor_menu,
-    mentee_menu,
-    signin,
-    signup,
-    mentee_landing_page,
-    mentor_landing_page,
-    mentee_matches_done,
-    report,
-    home,
-)
 
 log = logging.getLogger(__name__)
 
@@ -48,6 +34,8 @@ configure_logging()
 
 app.css.append_css({"external_url": config.css_cdn})
 
+app_structure.generate_structure()
+
 
 # Main app layout
 app.layout = html.Div([
@@ -56,6 +44,7 @@ app.layout = html.Div([
               html.Div(metaswitch_tinder.pages.report.report_button())],
              className="d-flex flex-row justify-content-between"),
     html.Br(),
+    # The 'page-content' is where all content appears
     html.Div(id='page-content'),
 ])
 
@@ -72,20 +61,8 @@ def display_page(pathname: str):
     :return: Dash html object to display as the children of the 'page-content' Div in the main layout.
     """
     return {
-        '/page-1': page_1.layout,
-        '/page-2': page_2.layout,
-        '/easter': easter.layout,
-        '/mentor-landing-page': mentor_landing_page.layout,
-        '/mentor-signin': signin.signin_redirected('/mentor-menu'),
-        '/mentor-signup': signup.signup_redirected('/mentor-menu'),
-        '/mentor-menu': mentor_menu.layout,
-        '/mentee-signin': signin.signin_redirected('/mentee-landing-page'),
-        '/mentee-signup': signup.signup_redirected('/mentee-landing-page'),
-        '/mentee-menu': mentee_menu.layout,
-        '/mentee-landing-page': mentee_landing_page.layout,
-        '/mentee-matches-done': mentee_matches_done.layout,
-        '/report': report.layout,
-    }.get(pathname, pages.home.layout)()
+        href: getattr(details['module'], 'layout') for href, details in app_globals.structure.items()
+    }.get(pathname, lambda: '404: Not found!')()
 
 
 @app.callback(dash.dependencies.Output('tab-content', 'children'),

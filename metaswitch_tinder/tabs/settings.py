@@ -1,23 +1,29 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import logging
 
 from flask import session
 
 from metaswitch_tinder.components.grid import create_equal_row
-from metaswitch_tinder import database, pages
+from metaswitch_tinder import database
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
+
+
+log = logging.getLogger(__name__)
 
 NAME = __name__.replace('.', '')
 
-def settings_tab():
+
+def layout():
     print('settings', session)
-    username = session.get('username', 'Not logged in!')
-    if username is 'Not logged in!':
+    if 'username' in session:
+        username = session['username']
+    else:
         return html.Div([html.Br(),
                          html.H1("You must be logged in to do this")])
     return html.Div(
         children=[
-            html.H1("{}, Update your details".format(username),),
+            html.H1("Hi {}! Want to update your details?".format(username),),
             html.Br(),
             create_equal_row([
                 html.Label('Email:'),

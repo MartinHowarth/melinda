@@ -6,12 +6,15 @@ from dash.dependencies import Input, Output, State, Event
 
 from metaswitch_tinder import tinder_email
 from metaswitch_tinder.app import app
+from metaswitch_tinder.app_structure import href
 
 
 log = logging.getLogger(__name__)
 
 
 NAME = __name__.replace('.', '')
+
+submit = "submit"
 
 
 def layout():
@@ -24,7 +27,7 @@ def layout():
                      style={'width': '100%'}),
         dcc.Link(html.Button("Submit Report", id='submit-{}'.format(NAME),
                              n_clicks=0, className="btn btn-sm btn-danger btn-block"),
-                 href="/")
+                 href=href(__name__, submit))
     ], className="container text-center")
 
 
@@ -42,4 +45,4 @@ def report_email(report_text):
 
 
 def report_button():
-    return dcc.Link("Report", href='/report', className="btn btn-primary btn-block btn-danger", id='report')
+    return dcc.Link("Report", href=href(__name__), className="btn btn-primary btn-block btn-danger", id='report')

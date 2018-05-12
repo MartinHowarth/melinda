@@ -1,10 +1,7 @@
-from . import matches
-from .matches import matches_tab
-from .messages import messages
-from .settings import settings_tab
+from . import matches, messages, settings
 
 tabs = {
-    'matches': matches_tab,
-    'messages': messages,
-    'settings': settings_tab
+    'matches': matches.layout,
+    'messages': messages.layout,
+    'settings': settings.layout,
 }

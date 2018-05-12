@@ -1,18 +1,25 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import logging
 
 from dash.dependencies import Input, Output, State, Event
 from flask import session
 
 import metaswitch_tinder.database.matches
 
+from metaswitch_tinder import database
 from metaswitch_tinder.app import app
+from metaswitch_tinder.app_structure import href
 from metaswitch_tinder.components.grid import create_equal_row
 from metaswitch_tinder.components.inputs import multi_dropdown_with_tags
-from metaswitch_tinder import database
 
+
+log = logging.getLogger(__name__)
 
 NAME = __name__.replace('.', '')
+
+sign_in = 'sign_in'
+submit_request = 'submit_request'
 
 
 def layout():
@@ -34,7 +41,7 @@ def layout():
             dcc.Link(html.Button("Sign in",
                                  id='sign-in-{}'.format(NAME),
                                  className="btn btn-lg btn-primary btn-block"),
-                     href='/mentee-signin'),
+                     href=href(__name__, sign_in)),
             html.Br(),
             html.Br(),
             html.H3('New mentoring request', className="text-center"),
@@ -66,7 +73,7 @@ def layout():
         dcc.Link(html.Button("Submit my request!",
                              id='submit-{}'.format(NAME),
                              className="btn btn-lg btn-success btn-block"),
-                 href='/mentee-menu'),
+                 href=href(__name__, submit_request)),
     ],
         className="container", id='my-div')
 

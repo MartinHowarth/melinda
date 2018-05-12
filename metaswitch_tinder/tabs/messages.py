@@ -4,10 +4,11 @@ import dash_html_components as html
 from flask import session
 
 
-def messages():
+def layout():
     print('messages', session)
-    username = session.get('username', 'Not logged in!')
-    if username is 'Not logged in!':
+    if 'username' in session:
+        username = session['username']
+    else:
         print('not logged in', session)
         return html.Div([html.Br(),
                          html.H1("You must be logged in to do this")])
