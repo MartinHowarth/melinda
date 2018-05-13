@@ -1,21 +1,17 @@
-import dash_core_components as dcc
 import dash_html_components as html
 import logging
 import random
 
 from dash.dependencies import Output, State, Event
-from flask import session
 
 from metaswitch_tinder import matches
+from metaswitch_tinder.database.manage import get_request_by_id, get_user
 from metaswitch_tinder.app import app, config
-from metaswitch_tinder.app_structure import href
 from metaswitch_tinder.components.grid import create_magic_three_row
+from metaswitch_tinder.components.session import is_logged_in, on_mentee_tab
 
 
 log = logging.getLogger(__name__)
-
-
-make_a_request = 'make_a_request'
 
 
 def children_no_matches():
@@ -26,10 +22,6 @@ def children_no_matches():
             html.Br(),
             html.Br(),
             html.P("Aw shucks! You're out of matches!", className="lead"),
-            html.Br(),
-            dcc.Link(html.Button("Make a request", className="btn btn-primary btn-lg btn-block"),
-                     href=href(__name__, make_a_request)),
-            html.Br(),
             html.Div(None, id='current-other-user', hidden=True),
             html.Div(0, id='accept-match', hidden=True),
             html.Div(0, id='reject-match', hidden=True),
@@ -42,6 +34,32 @@ def children_no_matches():
 def children_for_match(match: matches.Match, completed_users):
     your_tags = match.your_tags
     their_tags = match.their_tags
+
+    if on_mentee_tab():
+        mentor = get_user(match.other_user)
+        table_rows = [
+            html.Tr([
+                html.Td("Mentor skills"),
+                html.Td(', '.join(mentor.get_tags()))
+            ], className="table-success"),
+            html.Tr([
+                html.Td("Mentor bio"),
+                html.Td(mentor.bio)
+            ], className="table-success"),
+        ]
+    else:
+        request = get_request_by_id(match.request_id)
+        table_rows = [
+            html.Tr([
+                html.Td("Requested skills"),
+                html.Td(', '.join(request.get_tags()))
+            ], className="table-success"),
+            html.Tr([
+                html.Td("Comment"),
+                html.Td(request.comment)
+            ], className="table-success"),
+        ]
+
     return [
             html.Br(),
             create_magic_three_row([
@@ -59,17 +77,8 @@ def children_for_match(match: matches.Match, completed_users):
                     html.Td("Name"),
                     html.Td(match.other_user)
                 ], className="table-success"),
-                html.Tr([
-                    html.Td("Tags"),
-                    html.Td(', '.join(match.their_tags))
-                ], className="table-success"),
-                html.Tr([
-                    html.Td("Bio"),
-                    html.Td(match.bio)
-                ], className="table-success"),
+                *table_rows
                ], className="table table-condensed"),
-            dcc.Link(html.Button("Find a mentor - Make a request", className="btn btn-primary btn-lg btn-block"),
-                     href=href(__name__, make_a_request)),
             html.Div(match.other_user, id='current-other-user', hidden=True),
             html.Div(completed_users, id='completed-users', hidden=True),
             html.Div(list(set(their_tags) & set(your_tags)), id='matched-tags', hidden=True),
@@ -93,9 +102,7 @@ def get_matches_children(completed_users=list()):
 
 
 def layout():
-    print('matches', session)
-    if 'username' not in session:
-        print('not logged in', session)
+    if not is_logged_in():
         return html.Div([html.Br(),
                          html.H1("You must be logged in to do this")])
     return html.Div(
@@ -124,12 +131,12 @@ def layout():
 def submit_mentee_information(other_user, n_accept_clicked, n_reject_clicked, completed_users,
                               matched_tags, match_request_id):
     if n_accept_clicked:
-        if session['is_mentee']:
+        if on_mentee_tab():
             matches.handle_mentee_accept_match(other_user, matched_tags, match_request_id)
         else:
             matches.handle_mentor_accept_match(other_user, matched_tags, match_request_id)
     else:
-        if session['is_mentee']:
+        if on_mentee_tab():
             matches.handle_mentee_reject_match(other_user, match_request_id)
         else:
             matches.handle_mentor_reject_match(other_user, match_request_id)
