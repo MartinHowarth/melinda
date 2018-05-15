@@ -1,10 +1,16 @@
+import logging
+
 from flask import session as flask_session
+from typing import Optional
 
 from .utils import wait_for
 from metaswitch_tinder.database.manage import get_user, User
 
 
-def current_username() -> str:
+log = logging.getLogger(__name__)
+
+
+def current_username() -> Optional[str]:
     return flask_session.get('username', None)
 
 
@@ -14,6 +20,18 @@ def current_user() -> User:
 
 def set_current_usename(username: str):
     flask_session['username'] = username
+
+
+def login(username: str):
+    set_current_usename(username)
+    log.info("%s has logged in.", username)
+
+
+def logout():
+    log.info("Logout: %s", flask_session)
+    keys = list(flask_session.keys())
+    for key in keys:
+        del flask_session[key]
 
 
 def is_logged_in() -> bool:
@@ -30,3 +48,14 @@ def on_mentee_tab() -> bool:
 
 def set_on_mentee_tab(status: bool):
     flask_session['on_mentee_tab'] = status
+
+
+def get_last_tab_on(page: str) -> Optional[str]:
+    cached_tab = flask_session.get('tab-{}'.format(page), None)
+    log.debug("%s - Cached tab was: %s", page, cached_tab)
+    return cached_tab
+
+
+def set_last_tab_on(page: str, last_tab: str):
+    log.info("%s - Caching last tab as: %s", page, last_tab)
+    flask_session['tab-{}'.format(page)] = last_tab
