@@ -1,31 +1,39 @@
 import random
 
+import metaswitch_tinder.database.models
+
 from metaswitch_tinder.app import db
-from metaswitch_tinder.database import manage
 
 
 def populate():
     db.create_all()
 
     for i in range(10):
-        user = manage.User(
+        user = metaswitch_tinder.database.models.User(
             'user{}'.format(i),
             'user{}@email.com'.format(i),
             'user{} bio'.format(i),
-            ['Coding',
-             'Design',
-             'Testing'],
+            random.choices(
+                ['Coding',
+                 'Design',
+                 'Testing'],
+                k=2
+            ),
             'I can teach you anything!'
         )
         user.add()
 
     for i in range(5):
-        req = manage.Request(
+        req = metaswitch_tinder.database.models.Request(
             'user{}'.format(i),
-            random.choice(['Coding', 'Design', 'Testing']),
+            [random.choice(['Coding', 'Design', 'Testing'])],
             "Teach me a random thing.",
         )
         req.add()
+
+
+def clear():
+    db.drop_all()
 
 
 if __name__ == "__main__":

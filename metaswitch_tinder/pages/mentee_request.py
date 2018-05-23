@@ -2,8 +2,9 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from dash.dependencies import Output, State, Event
+from typing import List
 
-import metaswitch_tinder.database.matches
+import metaswitch_tinder.database.models
 
 from metaswitch_tinder.app import app
 from metaswitch_tinder import database
@@ -25,7 +26,7 @@ def layout():
     return html.Div([
         html.Label('What topics do you want to learn about?'),
         html.Br(),
-        multi_dropdown_with_tags(database.tags.get_tags(), categories_id),
+        multi_dropdown_with_tags(database.get_tags(), categories_id),
         html.Br(),
         html.Label('Any additional details about this request that the mentor should know?', className="text-center"),
         html.Br(),
@@ -48,7 +49,12 @@ def layout():
     ],
     [Event(submit_button, 'click')]
 )
-def submit_mentee_information(categories, details):
+def submit_mentee_information(categories: List[str], details: str):
     print('mentee request', categories, details)
     wait_for_login()
-    metaswitch_tinder.database.matches.handle_mentee_add_request(current_username(), categories, details)
+    user_name = current_username()
+    if user_name is None:
+        raise AssertionError("Failed to login with user name: %s" % user_name)
+
+    request = metaswitch_tinder.database.models.Request(user_name, categories, details)
+    request.add()

@@ -4,8 +4,7 @@ from flask import session as flask_session
 from typing import Optional
 
 from .utils import wait_for
-from metaswitch_tinder.database.manage import get_user, User
-
+from metaswitch_tinder.database import User, get_user
 
 log = logging.getLogger(__name__)
 
@@ -14,8 +13,15 @@ def current_username() -> Optional[str]:
     return flask_session.get('username', None)
 
 
-def current_user() -> User:
-    return get_user(current_username())
+def get_current_user() -> User:
+    user_name = current_username()
+    if user_name is None:
+        raise AssertionError("Could not get current user as they are not logged in.")
+
+    user = get_user(user_name)
+    if user is None:
+        raise AssertionError("Could not get current user from database by name: %s" % user_name)
+    return user
 
 
 def set_current_usename(username: str):
