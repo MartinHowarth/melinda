@@ -1,10 +1,14 @@
 """Module that defines how app pages link to other app pages."""
+import logging
 import sys
 
 from typing import Any, Callable
 
 from metaswitch_tinder import app_globals
 from metaswitch_tinder.components.session import is_logged_in
+
+
+log = logging.getLogger(__name__)
 
 
 def if_logged_in_else(logged_in_target: str, other_target: str) -> Callable:
@@ -54,7 +58,6 @@ def generate_structure():
         page_1,
         page_2,
         user_menu,
-        signin,
         signup,
         mentee_landing_page,
         mentee_request,
@@ -66,6 +69,10 @@ def generate_structure():
         matches,
         completed_matches,
         settings,
+    )
+    from metaswitch_tinder.components import (  # noqa
+        auth,
+        debug_login
     )
 
     # The keys of this dictionary are the `href`s for each page.
@@ -87,7 +94,8 @@ def generate_structure():
         module_href(mentee_landing_page): {
             'module': mentee_landing_page,
             'links': {
-                mentee_landing_page.sign_in: module_href(signin),
+                mentee_landing_page.sign_in: module_href(user_menu),
+                mentee_request.submit_request: module_href(user_menu),
             }
         },
         module_href(mentee_request): {
@@ -99,14 +107,8 @@ def generate_structure():
         module_href(signin_or_signup): {
             'module': signin_or_signup,
             'links': {
-                signin_or_signup.signin: module_href(signin),
+                signin_or_signup.signin: module_href(user_menu),
                 signin_or_signup.signup: module_href(signup),
-            }
-        },
-        module_href(signin): {
-            'module': signin,
-            'links': {
-                signin.submit: module_href(user_menu),
             }
         },
         module_href(signup): {
@@ -126,4 +128,22 @@ def generate_structure():
             'links': {
             }
         },
+        module_href(auth): {
+            'module': auth,
+            'links': {
+                auth.debug_login_target: module_href(debug_login)
+            }
+        },
+        module_href(debug_login): {
+            'module': debug_login,
+            'links': {
+                debug_login.debug_login_submit: module_href(user_menu),
+            }
+        },
+        module_href(easter): {
+            'module': easter,
+            'links': {
+            }
+        },
     }
+    log.info("App structure is: %s", app_globals.structure)

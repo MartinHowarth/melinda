@@ -4,7 +4,6 @@ import logging
 
 from dash.dependencies import Output, State, Event
 
-import metaswitch_tinder.database.models
 from metaswitch_tinder import database
 from metaswitch_tinder.app import app
 from metaswitch_tinder.app_structure import href
@@ -24,15 +23,8 @@ def layout():
     return html.Div([
         html.H1("Metaswitch Tinder", className="text-center"),
         html.Br(),
-        create_equal_row([
-            html.Label('Username:', ),
-            dcc.Input(value='', type='text', id='username-{}'.format(NAME)),
-        ]),
-        html.Br(),
-        create_equal_row([
-            html.Label('Email:'),
-            dcc.Input(value='@metaswitch.com', type='text', id='email-{}'.format(NAME)),
-        ]),
+        html.P("Username and email provided by google authentication.",
+               className="lead"),
         html.Br(),
         create_equal_row([
             html.Label('Location:', ),
@@ -52,9 +44,9 @@ def layout():
                       value='', type='text', id='details-{}'.format(NAME))
         ]),
         html.Br(),
-        dcc.Link(html.Button("Submit!", id='submit-{}'.format(NAME),
-                             n_clicks=0, className="btn btn-lg btn-primary btn-block"),
-                 href=href(__name__, submit)),
+        html.A(html.Button("Submit!", id='submit-{}'.format(NAME),
+                           n_clicks=0, className="btn btn-lg btn-primary btn-block"),
+               href='/login'),
     ], className="container", id='signup')
 
 
@@ -62,14 +54,12 @@ def layout():
     Output('signup', 'children'),
     [],
     [
-        State('username-{}'.format(NAME), 'value'),
-        State('email-{}'.format(NAME), 'value'),
         State('biography-{}'.format(NAME), 'value'),
         State('categories-{}'.format(NAME), 'value'),
         State('details-{}'.format(NAME), 'value'),
     ],
     [Event('submit-{}'.format(NAME), 'click')]
 )
-def submit_signup_information(username, email, biography, categories, details):
-    metaswitch_tinder.database.models.handle_signup_submit(username, email, biography, categories, details)
-    session.login(username)
+def submit_signup_information(biography, categories, details):
+    session.store_signup_information(biography, mentor_categories=categories, mentor_details=details)
+    session.set_post_login_redirect(href(__name__, submit))
