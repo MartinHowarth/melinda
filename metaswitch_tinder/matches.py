@@ -1,7 +1,7 @@
-"""Module to handle generating matches and handling match requests from mentors and mentees."""
+"""Handle generating matches and handling match requests from mentors and mentees."""
 from metaswitch_tinder import tinder_email
 from metaswitch_tinder.components.session import get_current_user
-from metaswitch_tinder.database import User, Request
+from metaswitch_tinder.database import Request, User
 
 
 def handle_mentee_reject_match(matched_user: User, request: Request):
@@ -26,7 +26,7 @@ def handle_mentor_accept_match(matched_user: User, request: Request):
     request.handle_mentor_accept_mentee(mentor)
 
     email_text = "You're a match!"
-    email_text += '\n\n'
+    email_text += "\n\n"
     email_text += request.comment
 
     tinder_email.send_match_email([mentor.email, mentee.email], email_text)
