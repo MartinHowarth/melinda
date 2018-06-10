@@ -456,6 +456,8 @@ class User(db.Model):
             else:
                 request.remove_possible_mentor(self)
 
+        matching_requests.extend(self.get_requests_as_mentee())
+
         self.requests = list(set(matching_requests))
         self.commit()
 
