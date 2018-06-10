@@ -1,6 +1,8 @@
 import itertools
 import logging
+import string
 import time
+
 from random import randint
 from typing import List, Optional, Union
 
@@ -9,6 +11,46 @@ from sqlalchemy_utils import ScalarListType
 from metaswitch_tinder.app import db
 
 log = logging.getLogger(__name__)
+
+
+class Tag(db.Model):
+    """A tag that users can associate with requests and claim as skills."""
+
+    _name = db.Column(db.String, primary_key=True)
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, value: str):
+        value = self.normalise_tag(value)
+        self._name = value
+
+    def add(self):
+        db.session.add(self)
+        log.info(f"Added new tag to database: {self.name}")
+        self.commit()
+
+    def commit(self):
+        db.session.commit()
+
+    @staticmethod
+    def normalise_tag(name: str) -> str:
+        """
+        Take a string and normalise it so that it matches a standard.
+
+        That is:
+            - Capital first letter of each word
+            - No commas (the tags are separated by commas in the database)
+        """
+        normalised_name = name.replace(",", " ")
+        normalised_name = string.capwords(normalised_name)
+        log.debug("Normalised tag %s to: %s", name, normalised_name)
+        return normalised_name
 
 
 class Request(db.Model):
@@ -451,6 +493,10 @@ def get_users(names: List[str]) -> List[User]:
     if not names:
         return []
     return User.query.filter(User.name.in_(names)).all()
+
+
+def list_all_tags() -> List[Tag]:
+    return Tag.query.all()
 
 
 def handle_signup_submit(
