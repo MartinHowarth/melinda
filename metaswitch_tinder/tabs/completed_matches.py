@@ -3,15 +3,17 @@ from typing import List
 import dash_html_components as html
 
 from metaswitch_tinder.components.session import (
-    current_username,
+    current_user_email,
     get_current_user,
     is_logged_in,
 )
-from metaswitch_tinder.database import Request
+from metaswitch_tinder.database import Request, get_user
 
 
 def children_no_matches():
-    return [html.H1("{}, you have no completed matches! :(".format(current_username()))]
+    return [
+        html.H1("{}, you have no completed matches! :(".format(current_user_email()))
+    ]
 
 
 def children_matches(completed_matches: List[Request]) -> List:
@@ -27,12 +29,16 @@ def children_matches(completed_matches: List[Request]) -> List:
     ]
 
     for match in completed_matches:
-        if match.maker == current_username():
+        if match.maker == current_user_email():
             # Current user is the mentee
-            partner_name = "{} (mentor)".format(match.mentor)
+            other_user = get_user(match.mentor)
+            name = other_user.name if other_user else "unknown"
+            partner_name = "{} (mentor)".format(name)
         else:
             # Current user is the mentor
-            partner_name = "{} (mentee)".format(match.maker)
+            other_user = get_user(match.maker)
+            name = other_user.name if other_user else "unknown"
+            partner_name = "{} (mentee)".format(name)
 
         table_rows.append(
             html.Tr(
@@ -45,7 +51,7 @@ def children_matches(completed_matches: List[Request]) -> List:
             )
         )
     return [
-        html.H1("{}, here are your completed matches".format(current_username())),
+        html.H1("{}, here are your completed matches".format(get_current_user().name)),
         html.Table([*table_rows], className="table table-condensed"),
     ]
 
