@@ -36,7 +36,7 @@ setup(
         "oauthlib==2.1.0",  # Not directly required, included to resolve a downstream dependency clash...
         "plotly==2.6.0",
         "psycopg2",
-        "requests==2.18.4",
+        "requests~=2.20",
         "requests_oauthlib==1.0.0",  # Not directly required, included to resolve a downstream dependency clash...
         "schematics",
         "sendgrid",
