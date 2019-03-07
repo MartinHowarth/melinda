@@ -5,10 +5,10 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name="melinda",
+    name="metaswitch_tinder",
     version="0.0.1",
-    description="Melinda",
-    url="https://github.com/MartinHowarth/melinda",
+    description="Metaswitch Tinder",
+    url="https://github.com/MartinHowarth/metaswitch-tinder",
     author="Martin Howarth",
     author_email="howarth.martin@gmail.com",
     license="MIT",
@@ -33,9 +33,11 @@ setup(
         "Flask-SQLAlchemy",
         "gunicorn",
         "munch",
+        "oauthlib==2.1.0",  # Not directly required, included to resolve a downstream dependency clash...
         "plotly==2.6.0",
         "psycopg2",
-        "requests",
+        "requests==2.18.4",
+        "requests_oauthlib==1.0.0",  # Not directly required, included to resolve a downstream dependency clash...
         "schematics",
         "sendgrid",
         "sqlalchemy-utils",
